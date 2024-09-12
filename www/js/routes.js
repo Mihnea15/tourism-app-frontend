@@ -7,27 +7,34 @@ var routes = [
                 app.preloader.hide();
             }
         },
-        async: function ({router, to, resolve}) {
-            console.log('aaaaaaa')
-            router.request({
-                url: `${apiEntryPoint}api-cities`,
-                type: "GET",
-                dataType: "json",
-            }).then((res) => {
-                console.log(res)
-                resolve(
-                    {
+        async: function ({app, to, resolve}) {
+            console.log('api')
+            fetch(`${apiEntryPoint}api-cities`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((res) => {
+                    console.log(res);
+                    resolve({
                         componentUrl: './home.html',
-                    },
-                    {
+                    }, {
                         props: {
                             cities: res.data,
-                        }
-                    }
-                );
-            }).catch((err) => {
-                console.log(err)
-            });
+                        },
+                    });
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
         }
     },
     {

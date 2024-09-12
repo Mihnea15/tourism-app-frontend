@@ -6,10 +6,12 @@
         Apache Cordova Team
     </author>
     <content src="index.html" />
+    <allow-navigation href="http://*/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
-
-    <allow-navigation href="*" />
+    <access origin="*" />
+    <preference name="Scheme" value="http" />
+    <preference name="Hostname" value="localhost" />
 
     <platform name="android">
       <preference name="StatusBarOverlaysWebView" value="false" />

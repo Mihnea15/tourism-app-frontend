@@ -1,4 +1,4 @@
-const apiEntryPoint = 'http://localhost:3000/';
+const apiEntryPoint = 'http://10.1.30.177:3000/';
 var cordovaApp = {
     f7: null,
     /*
