@@ -31,10 +31,10 @@
         <!-- Page Content -->
         <div class="page-content">
             <div class="list list-strong-ios list-outline-ios list-dividers-ios">
-                <a href="#" class="item-link smart-select smart-select-init" data-open-in="sheet" @click=${e => updateMapBySelect(event)}>
+                <a href="#" class="item-link smart-select smart-select-init" data-open-in="sheet">
                     <select name="select-cities">
                         ${cities.map((city) => $h`
-                            <option value="${city.id}">${city.name}</option>
+                        <option value="${city.id}">${city.name}</option>
                         `)}
                     </select>
                     <div class="item-content">
@@ -45,53 +45,66 @@
                     </div>
                 </a>
             </div>
-            <div id="map" style="height: 400px;"></div>
+            <div class="card padding-left-half padding-right-half">
+                <div id="map" style="height: 250px; border-radius: 15px;"></div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-    export default (props, {$on}) => {
+    export default (props, { $on }) => {
         const cities = props.cities;
-
-        $on('pageInit', () => {
-            console.log(L)
-            if (cities.length > 0) {
-                initMap(cities[0].latitude, cities[0].longitude);
-            }
-        });
 
         let map;
         let marker;
-        function initMap(latitude, longitude) {
-            console.log(latitude, longitude)
-            map = L.map('map').setView([latitude, longitude], 13); // Centrul hărții la coordonatele orașului
+
+        $on('pageInit', () => {
+            if (cities.length > 0) {
+                initMap(cities[0].latitude, cities[0].longitude, cities[0].name);
+            }
+
+            // Add event listener to the select element
+            const selectElement = document.querySelector('select[name="select-cities"]');
+            if (selectElement) {
+                selectElement.addEventListener('change', (event) => {
+                    const selectedCityId = event.target.value;
+                    const selectedCity = cities.find((city) => city.id == selectedCityId);
+
+                    if (selectedCity) {
+                        document.getElementById('selected-city').textContent = selectedCity.name;
+                        updateMap(selectedCity);
+                    }
+                });
+            }
+        });
+
+        function initMap(latitude, longitude, cityName) {
+            map = L.map('map').setView([latitude, longitude], 13);
 
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
             }).addTo(map);
 
+            // Add marker at initial location
             marker = L.marker([latitude, longitude]).addTo(map);
-            marker.bindPopup(`<b>${cities[0].name}</b><br>Latitude: ${latitude}, Longitude: ${longitude}`).openPopup();
+            marker.bindPopup(`<b>${cityName}</b><br>Latitude: ${latitude}, Longitude: ${longitude}`).openPopup();
         }
 
         function updateMap(city) {
             if (map) {
+                // Remove the existing marker from the map
+                if (marker) {
+                    map.removeLayer(marker);
+                    marker = null;
+                }
+                // Move the map to the new city's coordinates
                 map.setView([city.latitude, city.longitude], 13);
-                marker.setLatLng([city.latitude, city.longitude]);
+                // Add a new marker at the new location
+                marker = L.marker([city.latitude, city.longitude]).addTo(map);
                 marker.bindPopup(`<b>${city.name}</b><br>Latitude: ${city.latitude}, Longitude: ${city.longitude}`).openPopup();
             } else {
-                initMap(city.latitude, city.longitude);
-            }
-        }
-
-        function updateMapBySelect(event) {
-            const selectedCityId = event.target.value;
-            const selectedCity = cities.find((city) => city.id === selectedCityId);
-
-            if (selectedCity) {
-                document.getElementById('selected-city').textContent = selectedCity.name;
-                updateMap(selectedCity);
+                initMap(city.latitude, city.longitude, city.name);
             }
         }
 
