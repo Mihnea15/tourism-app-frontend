@@ -1,0 +1,140 @@
+<template>
+    <!-- Componentele și conținutul paginii trebuie să fie HTML valid -->
+    <div class="page" data-name="home">
+        <!-- Left panel with cover effect-->
+        <div class="panel panel-left panel-cover dark panel-init">
+            <div class="view">
+                <div class="page">
+                    <div class="navbar">
+                        <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="title">Left Panel</div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="block">Left panel content goes here</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link icon-only panel-open" data-panel="left">
+                        <i class="icon f7-icons if-not-md">menu</i>
+                        <i class="icon material-icons if-md">menu</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="list list-strong-ios list-outline-ios list-dividers-ios">
+                <a href="#" class="item-link smart-select smart-select-init" data-open-in="sheet" @click=${e => updateMapBySelect(event)}>
+                    <select name="select-cities">
+                        ${cities.map((city) => $h`
+                            <option value="${city.id}">${city.name}</option>
+                        `)}
+                    </select>
+                    <div class="item-content">
+                        <div class="item-inner">
+                            <div class="item-title">Select a city</div>
+                            <div class="item-after" id="selected-city">Choose City</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div id="map" style="height: 400px;"></div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default (props, {$on}) => {
+        const cities = props.cities;
+        let mapInitialized = false;
+        let map;
+        let marker;
+        let watchId;
+
+        // Funcția de inițializare a hărții
+        function initializeMap() {
+            if (mapInitialized) return; // Verifică dacă harta este deja inițializată
+            mapInitialized = true;
+
+            // Creează harta
+            map = L.map('map').setView([0, 0], 13); // Centru temporar
+
+            // Adaugă tile-uri de la OpenStreetMap
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+                detectRetina: true
+            }).addTo(map);
+
+            // Obține poziția curentă a utilizatorului
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+
+                // Actualizează centrul hărții la poziția utilizatorului
+                map.setView([userLat, userLng], 13);
+
+                // Adaugă marcator pentru poziția utilizatorului
+                marker = L.marker([userLat, userLng]).addTo(map);
+                marker.bindPopup(`<b>Current Position</b><br>Latitude: ${userLat}, Longitude: ${userLng}`).openPopup();
+
+                // Observă schimbările de poziție
+                watchId = navigator.geolocation.watchPosition(updatePosition, null, {
+                    enableHighAccuracy: true
+                });
+
+            }, function(error) {
+                console.error('Geolocation error: ', error);
+            }, {
+                enableHighAccuracy: true
+            });
+        }
+
+        // Funcția de actualizare a poziției
+        function updatePosition(position) {
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+
+            if (marker) {
+                marker.setLatLng([userLat, userLng]);
+                marker.bindPopup(`<b>Updated Position</b><br>Latitude: ${userLat}, Longitude: ${userLng}`).openPopup();
+            } else {
+                marker = L.marker([userLat, userLng]).addTo(map);
+                marker.bindPopup(`<b>Current Position</b><br>Latitude: ${userLat}, Longitude: ${userLng}`).openPopup();
+            }
+
+            map.setView([userLat, userLng], 13);
+        }
+
+        // Actualizează harta în funcție de orașul selectat
+        function updateMapBySelect(event) {
+            const selectedCityId = event.target.value;
+            const selectedCity = cities.find((city) => city.id === selectedCityId);
+
+            if (selectedCity) {
+                document.getElementById('selected-city').textContent = selectedCity.name;
+                map.setView([selectedCity.latitude, selectedCity.longitude], 13);
+                if (marker) {
+                    marker.setLatLng([selectedCity.latitude, selectedCity.longitude]);
+                    marker.bindPopup(`<b>${selectedCity.name}</b><br>Latitude: ${selectedCity.latitude}, Longitude: ${selectedCity.longitude}`).openPopup();
+                } else {
+                    marker = L.marker([selectedCity.latitude, selectedCity.longitude]).addTo(map);
+                    marker.bindPopup(`<b>${selectedCity.name}</b><br>Latitude: ${selectedCity.latitude}, Longitude: ${selectedCity.longitude}`).openPopup();
+                }
+            }
+        }
+
+        $on('pageInit', () => {
+            initializeMap();
+            console.log(L)
+        });
+
+        return $render;
+    };
+</script>

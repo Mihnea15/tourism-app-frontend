@@ -2,13 +2,11 @@ var routes = [
     {
         name: 'home',
         path: '/',
-        on: {
-            pageAfterIn: function () {
-                app.preloader.hide();
-            }
-        },
-        async: function ({app, to, resolve}) {
-            console.log('api')
+        async: function ({ app, to, from, resolve, reject }) {
+            // Afișează preloader-ul
+            app.preloader.show();
+
+            // Efectuează cererea API pentru a obține datele
             fetch(`${apiEntryPoint}api-cities`, {
                 method: 'GET',
                 headers: {
@@ -23,19 +21,31 @@ var routes = [
                 })
                 .then((res) => {
                     console.log(res);
-                    resolve({
-                        componentUrl: './home.html',
-                    }, {
-                        props: {
-                            cities: res.data,
+
+                    // Ascunde preloader-ul
+                    app.preloader.hide();
+
+                    // Stochează datele în store
+                    store.dispatch('addCities', res);
+
+                    // Apelează funcția `resolve` pentru a încărca componenta
+                    resolve(
+                        {
+                            componentUrl: './home.html',
                         },
-                    });
+                        {
+                            props: {
+                                cities: res, // Transmite datele ca `props`
+                            },
+                        }
+                    );
                 })
                 .catch((err) => {
-                    console.log(err);
+                    console.error(err);
+                    app.preloader.hide();
+                    reject(); // Adaugă un apel `reject` pentru erori
                 });
-
-        }
+        },
     },
     {
         path: '/about/',
