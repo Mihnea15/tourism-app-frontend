@@ -53,87 +53,47 @@
 <script>
     export default (props, {$on}) => {
         const cities = props.cities;
-        let mapInitialized = false;
+
+        $on('pageInit', () => {
+            console.log(L)
+            if (cities.length > 0) {
+                initMap(cities[0].latitude, cities[0].longitude);
+            }
+        });
+
         let map;
         let marker;
-        let watchId;
+        function initMap(latitude, longitude) {
+            console.log(latitude, longitude)
+            map = L.map('map').setView([latitude, longitude], 13); // Centrul hărții la coordonatele orașului
 
-        // Funcția de inițializare a hărții
-        function initializeMap() {
-            if (mapInitialized) return; // Verifică dacă harta este deja inițializată
-            mapInitialized = true;
-
-            // Creează harta
-            map = L.map('map').setView([0, 0], 13); // Centru temporar
-
-            // Adaugă tile-uri de la OpenStreetMap
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-                detectRetina: true
             }).addTo(map);
 
-            // Obține poziția curentă a utilizatorului
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-
-                // Actualizează centrul hărții la poziția utilizatorului
-                map.setView([userLat, userLng], 13);
-
-                // Adaugă marcator pentru poziția utilizatorului
-                marker = L.marker([userLat, userLng]).addTo(map);
-                marker.bindPopup(`<b>Current Position</b><br>Latitude: ${userLat}, Longitude: ${userLng}`).openPopup();
-
-                // Observă schimbările de poziție
-                watchId = navigator.geolocation.watchPosition(updatePosition, null, {
-                    enableHighAccuracy: true
-                });
-
-            }, function(error) {
-                console.error('Geolocation error: ', error);
-            }, {
-                enableHighAccuracy: true
-            });
+            marker = L.marker([latitude, longitude]).addTo(map);
+            marker.bindPopup(`<b>${cities[0].name}</b><br>Latitude: ${latitude}, Longitude: ${longitude}`).openPopup();
         }
 
-        // Funcția de actualizare a poziției
-        function updatePosition(position) {
-            const userLat = position.coords.latitude;
-            const userLng = position.coords.longitude;
-
-            if (marker) {
-                marker.setLatLng([userLat, userLng]);
-                marker.bindPopup(`<b>Updated Position</b><br>Latitude: ${userLat}, Longitude: ${userLng}`).openPopup();
+        function updateMap(city) {
+            if (map) {
+                map.setView([city.latitude, city.longitude], 13);
+                marker.setLatLng([city.latitude, city.longitude]);
+                marker.bindPopup(`<b>${city.name}</b><br>Latitude: ${city.latitude}, Longitude: ${city.longitude}`).openPopup();
             } else {
-                marker = L.marker([userLat, userLng]).addTo(map);
-                marker.bindPopup(`<b>Current Position</b><br>Latitude: ${userLat}, Longitude: ${userLng}`).openPopup();
+                initMap(city.latitude, city.longitude);
             }
-
-            map.setView([userLat, userLng], 13);
         }
 
-        // Actualizează harta în funcție de orașul selectat
         function updateMapBySelect(event) {
             const selectedCityId = event.target.value;
             const selectedCity = cities.find((city) => city.id === selectedCityId);
 
             if (selectedCity) {
                 document.getElementById('selected-city').textContent = selectedCity.name;
-                map.setView([selectedCity.latitude, selectedCity.longitude], 13);
-                if (marker) {
-                    marker.setLatLng([selectedCity.latitude, selectedCity.longitude]);
-                    marker.bindPopup(`<b>${selectedCity.name}</b><br>Latitude: ${selectedCity.latitude}, Longitude: ${selectedCity.longitude}`).openPopup();
-                } else {
-                    marker = L.marker([selectedCity.latitude, selectedCity.longitude]).addTo(map);
-                    marker.bindPopup(`<b>${selectedCity.name}</b><br>Latitude: ${selectedCity.latitude}, Longitude: ${selectedCity.longitude}`).openPopup();
-                }
+                updateMap(selectedCity);
             }
         }
-
-        $on('pageInit', () => {
-            initializeMap();
-            console.log(L)
-        });
 
         return $render;
     };
