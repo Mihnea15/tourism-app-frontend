@@ -177,7 +177,7 @@
 
             // Tile layer cu tema "light" de la CartoDB Positron
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                // attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
                 maxZoom: 18
             }).addTo(map);
         }
@@ -210,8 +210,8 @@
 
                     // Creează un marker personalizat fără umbră
                     const customIcon = L.icon({
-                        iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png', // Poți schimba imaginea markerului aici
-                        iconSize: [25, 41], // Dimensiunea markerului
+                        iconUrl: './css/images/pins/location-pin.png', // Poți schimba imaginea markerului aici
+                        iconSize: [35, 61], // Dimensiunea markerului
                         iconAnchor: [12, 41], // Punctul de ancorare al markerului
                         popupAnchor: [1, -34], // Punctul de ancorare pentru pop-up
                         shadowUrl: null, // Elimină umbra markerului
