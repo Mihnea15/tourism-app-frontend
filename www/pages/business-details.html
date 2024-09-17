@@ -1,0 +1,61 @@
+<template>
+    <div class="page" data-name="business-details">
+        <!-- Navbar -->
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="back link">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title" id="business-title" style="font-size: 20px;">${businessDetails.name}</div>
+            </div>
+        </div>
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="card">
+                <!-- Imaginea Business -->
+                <div class="block block-strong image_container" style="text-align: center; padding: 15px;">
+                    <!-- Imaginea va fi adăugată dinamic aici -->
+                </div>
+                <!-- Link-ul către pagina de Google -->
+                <div class="block google_page_container" style="text-align: center; padding: 10px;">
+                    <!-- Link-ul va fi adăugat dinamic aici -->
+                </div>
+                <!-- Butonul pentru Direcții -->
+                <div class="block button_container" style="text-align: center; padding: 10px;">
+                    <!-- Butonul va fi adăugat dinamic aici -->
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    let $$ = Dom7;
+    export default (props, { $on }) => {
+        const businessDetails = props.businessDetails;
+        console.log(businessDetails)
+
+        if (!businessDetails) {
+            console.error('Business details not found.');
+            return;
+        }
+
+        $on('pageInit', (e, page) => {
+            $$('.image_container').append(
+                '<img src="' + businessDetails.logo + '" alt="' + businessDetails.name + ' Logo" style="width: 100%; max-width: 300px; border-radius: 15px;">'
+            );
+            $$('.google_page_container').append(
+                '<p><b>Google Page:</b> <a id="business-google-link" href="' + businessDetails.google_page_url + '" class="external button button-small button-outline">Visit ' + businessDetails.name + '</a></p>'
+            );
+            $$('.button_container').append(
+                '<a href="https://www.google.com/maps/dir/?api=1&destination=' + businessDetails.latitude + ',' + businessDetails.longitude + '" class="button button-fill color-green external">Get Directions</a>'
+            );
+        });
+
+        return $render;
+    };
+</script>
