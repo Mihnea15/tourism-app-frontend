@@ -6,148 +6,45 @@ var routes = [
             // Afișează preloader-ul
             app.preloader.show();
 
-            // Efectuează cererea API pentru a obține datele
-            // fetch(`${apiEntryPoint}api-cities`, {
-            //     method: 'GET',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            // })
-            //     .then((response) => {
-            //         if (!response.ok) {
-            //             throw new Error(`HTTP error! Status: ${response.status}`);
-            //         }
-            //         return response.json();
-            //     })
-            //     .then((res) => {
-            //         console.log(res);
-            //
-            //         // Ascunde preloader-ul
-            //         app.preloader.hide();
-            //
-            //         // Stochează datele în store
-            //         store.dispatch('addCities', res);
-            //
-            //         // Apelează funcția `resolve` pentru a încărca componenta
-            //         resolve(
-            //             {
-            //                 componentUrl: './home.html',
-            //             },
-            //             {
-            //                 props: {
-            //                     cities: res, // Transmite datele ca `props`
-            //                 },
-            //             }
-            //         );
-            //     })
-            //     .catch((err) => {
-            //         console.error(err);
-            //         app.preloader.hide();
-            //         reject(); // Adaugă un apel `reject` pentru erori
-            //     });
-
-
-            // Simulate Ajax Request
-            setTimeout(function () {
-                // We got user data from request
-                let cities = [
-                    {
-                        'id': 2,
-                        'name': 'Suceava',
-                        'latitude': 47.6455,
-                        'longitude': 26.2486,
-                    },
-                    {
-                        'id': 1,
-                        'name': 'Vatra Dornei',
-                        'latitude': 47.3475,
-                        'longitude': 25.3594,
-                    },
-                ];
-
-                let business = [
-                    {
-                        'id': 1,
-                        'city_id': 2,
-                        'name': 'Hotel Mandachi',
-                        'latitude': 47.6217,
-                        'longitude': 26.2400,
-                        'logo': '../css/images/hotel_mandachi.jpg',
-                        'google_page_url': 'https://hotelmandachi.com/en/'
-                    },
-                    {
-                        'id': 2,
-                        'city_id': 2,
-                        'name': 'Continental',
-                        'latitude': 47.6461,
-                        'longitude': 26.2554,
-                        'logo': '../css/images/continental_logo.jpg',
-                        'google_page_url': 'https://mycontinental-suceava.continentalhotels.ro/'
-                    },
-                    {
-                        'id': 3,
-                        'city_id': 2,
-                        'name': 'Hotel Balada',
-                        'latitude': 47.6403,
-                        'longitude': 26.2632,
-                        'logo': '../css/images/hotel_balada.jpg',
-                        'google_page_url': 'https://hotelbalada.ro/'
-                    },
-                    {
-                        'id': 4,
-                        'city_id': 2,
-                        'name': 'Restaurant Ceaunul Bunicii',
-                        'latitude': 47.6428,
-                        'longitude': 26.2453,
-                        'logo': '../css/images/ceaunul_bunicii.png',
-                        'google_page_url': 'https://www.ceaunulbunicii.ro/'
-                    },
-                    {
-                        'id': 5,
-                        'city_id': 2,
-                        'name': 'Restaurant Casa Bucovineana',
-                        'latitude': 47.6506,
-                        'longitude': 26.2548,
-                        'logo': 'https://dummyimage.com/300',
-                        'google_page_url': 'https://casabucovineana.ro/'
-                    },
-                    {
-                        'id': 6,
-                        'city_id': 2,
-                        'name': 'Taco Loco',
-                        'latitude': 47.6423,
-                        'longitude': 26.2573,
-                        'logo': 'https://dummyimage.com/300',
-                        'google_page_url': 'https://www.tacolocosv.ro/'
-                    },
-                    {
-                        'id': 7,
-                        'city_id': 2,
-                        'name': 'Restaurant Union',
-                        'latitude': 47.6444,
-                        'longitude': 26.2611,
-                        'logo': 'https://dummyimage.com/300',
-                        'google_page_url': 'https://www.restaurant-union.ro/'
+            // Efectuează cererea pentru fișierul JSON
+            fetch('/js/data/cities_and_business.json')
+                .then((response) => {
+                    console.log(response)
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
                     }
-                ];
-                store.dispatch('addCities', cities);
-                store.dispatch('addBusiness', business);
-                // Hide Preloader
-                app.preloader.hide();
+                    return response.json();
+                })
+                .then((data) => {
+                    // Extrage datele despre orașe și afaceri din fișierul JSON
+                    let cities = data.cities;
+                    let business = data.business;
 
-                // Resolve route to load page
-                resolve(
-                    {
-                        componentUrl: './home.html',
-                    },
-                    {
-                        props: {
-                            cities: cities,
-                            business: business,
+                    // Stochează datele în store
+                    store.dispatch('addCities', cities);
+                    store.dispatch('addBusiness', business);
+
+                    // Ascunde preloader-ul
+                    app.preloader.hide();
+
+                    // Apelează funcția `resolve` pentru a încărca componenta
+                    resolve(
+                        {
+                            componentUrl: './home.html',
                         },
-                    }
-                );
-            }, 1000);
+                        {
+                            props: {
+                                cities: cities,
+                                business: business,
+                            },
+                        }
+                    );
+                })
+                .catch((err) => {
+                    console.error(err);
+                    app.preloader.hide();
+                    reject(); // Gestionare eroare
+                });
         },
     },
     {
@@ -156,20 +53,39 @@ var routes = [
         async: function ({app, to, from, resolve, reject}) {
             app.preloader.show();
 
-            let businessDetails = store.state.business[0].find(b => b.id == to.params.business_id);
-            store.dispatch('addBusinessDetails', businessDetails);
-            app.preloader.hide();
+            // Efectuează cererea pentru fișierul JSON
+            fetch('/js/data/cities_and_business.json')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    // Găsește afacerea în funcție de ID
+                    let businessDetails = data.business.find(b => b.id == to.params.business_id);
 
-            resolve(
-                {
-                    componentUrl: './pages/business-details.html',
-                },
-                {
-                    props: {
-                        businessDetails: businessDetails,
-                    },
-                }
-            );
+                    // Stochează detaliile afacerii în store
+                    store.dispatch('addBusinessDetails', businessDetails);
+
+                    app.preloader.hide();
+
+                    resolve(
+                        {
+                            componentUrl: './pages/business-details.html',
+                        },
+                        {
+                            props: {
+                                businessDetails: businessDetails,
+                            },
+                        }
+                    );
+                })
+                .catch((err) => {
+                    console.error(err);
+                    app.preloader.hide();
+                    reject(); // Gestionare eroare
+                });
         },
     },
     {
@@ -192,7 +108,6 @@ var routes = [
         path: '/settings/',
         url: './pages/settings.html',
     },
-
     {
         path: '/dynamic-route/blog/:blogId/post/:postId/',
         componentUrl: './pages/dynamic-route.html',

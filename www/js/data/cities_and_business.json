@@ -1,0 +1,81 @@
+{
+  "cities": [
+    {
+      "id": 2,
+      "name": "Suceava",
+      "latitude": 47.6455,
+      "longitude": 26.2486
+    },
+    {
+      "id": 1,
+      "name": "Vatra Dornei",
+      "latitude": 47.3475,
+      "longitude": 25.3594
+    }
+  ],
+  "business": [
+    {
+      "id": 1,
+      "city_id": 2,
+      "name": "Hotel Mandachi",
+      "latitude": 47.6217,
+      "longitude": 26.2400,
+      "logo": "../css/images/hotel_mandachi.jpg",
+      "google_page_url": "https://hotelmandachi.com/en/"
+    },
+    {
+      "id": 2,
+      "city_id": 2,
+      "name": "Continental",
+      "latitude": 47.6461,
+      "longitude": 26.2554,
+      "logo": "../css/images/continental_logo.jpg",
+      "google_page_url": "https://mycontinental-suceava.continentalhotels.ro/"
+    },
+    {
+      "id": 3,
+      "city_id": 2,
+      "name": "Hotel Balada",
+      "latitude": 47.6403,
+      "longitude": 26.2632,
+      "logo": "../css/images/hotel_balada.jpg",
+      "google_page_url": "https://hotelbalada.ro/"
+    },
+    {
+      "id": 4,
+      "city_id": 2,
+      "name": "Restaurant Ceaunul Bunicii",
+      "latitude": 47.6428,
+      "longitude": 26.2453,
+      "logo": "../css/images/ceaunul_bunicii.png",
+      "google_page_url": "https://www.ceaunulbunicii.ro/"
+    },
+    {
+      "id": 5,
+      "city_id": 2,
+      "name": "Restaurant Casa Bucovineana",
+      "latitude": 47.6506,
+      "longitude": 26.2548,
+      "logo": "https://dummyimage.com/300",
+      "google_page_url": "https://casabucovineana.ro/"
+    },
+    {
+      "id": 6,
+      "city_id": 2,
+      "name": "Taco Loco",
+      "latitude": 47.6423,
+      "longitude": 26.2573,
+      "logo": "https://dummyimage.com/300",
+      "google_page_url": "https://www.tacolocosv.ro/"
+    },
+    {
+      "id": 7,
+      "city_id": 2,
+      "name": "Restaurant Union",
+      "latitude": 47.6444,
+      "longitude": 26.2611,
+      "logo": "https://dummyimage.com/300",
+      "google_page_url": "https://www.restaurant-union.ro/"
+    }
+  ]
+}

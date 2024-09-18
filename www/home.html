@@ -208,23 +208,26 @@
                     option.textContent = b.name;
                     businessSelect.appendChild(option);
 
-                    // Creează un marker personalizat fără umbră
-                    const customIcon = L.icon({
-                        iconUrl: './css/images/pins/location-pin.png', // Poți schimba imaginea markerului aici
-                        iconSize: [35, 61], // Dimensiunea markerului
-                        iconAnchor: [12, 41], // Punctul de ancorare al markerului
-                        popupAnchor: [1, -34], // Punctul de ancorare pentru pop-up
-                        shadowUrl: null, // Elimină umbra markerului
+                    const markerHtml = `
+                        <div style="position: relative; width: 35px; height: 61px;">
+                            <img src="./css/images/pins/location-pin.png" style="width: 100%; height: auto;">
+                            <img src="${b.logo}" style="position: absolute; top: 24%; left: 50%; transform: translate(-50%, -50%); width: 25px; height: 25px; border-radius: 50%;">
+                        </div>
+                    `;
+
+                    const customIcon = L.divIcon({
+                        html: markerHtml,
+                        iconSize: [35, 61],
+                        className: ''
                     });
 
-                    // Adaugă marker pentru fiecare business și stochează-l
                     const marker = L.marker([b.latitude, b.longitude], { icon: customIcon }).addTo(map);
                     const popupContent = `
                         <div style="text-align: center;">
-                            <img src="${b.logo}" alt="${b.name}" style="width: 50px; height: 50px; border-radius: 25px;">
+                            <img src="${b.logo}" alt="${b.name}" style="width: 50px; height: 50px; border-radius: 25px; background-color: black;">
                             <h3>${b.name}</h3>
                             <a class="button button-small" href="/business-details/${b.id}" id="go-to-details-${b.id}">Go to Details</a>
-                            <br><a class="button button-small external" href="${b.google_page_url}">Google Page</a>
+                            <a class="button button-small external" href="${b.google_page_url}">Google Page</a>
                         </div>
                     `;
 
