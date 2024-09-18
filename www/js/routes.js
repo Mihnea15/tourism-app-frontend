@@ -9,7 +9,6 @@ var routes = [
             // Efectuează cererea pentru fișierul JSON
             fetch('/js/data/cities_and_business.json')
                 .then((response) => {
-                    console.log(response)
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }

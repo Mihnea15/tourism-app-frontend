@@ -9,6 +9,8 @@
     <allow-navigation href="http://*/*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="tel:*" />
     <access origin="*" />
     <preference name="Scheme" value="http" />
     <preference name="Hostname" value="localhost" />
@@ -27,12 +29,12 @@
       <splash density="port-xhdpi" src="res/screen/android/drawable-xhdpi/screen.png" />
       <splash density="port-xxhdpi" src="res/screen/android/drawable-xxhdpi/screen.png" />
       <splash density="port-xxxhdpi" src="res/screen/android/drawable-xxxhdpi/screen.png" />
-      <icon density="ldpi" src="res/icon/android/mipmap-ldpi/ic_launcher.png" />
-      <icon density="mdpi" src="res/icon/android/mipmap-mdpi/ic_launcher.png" />
-      <icon density="hdpi" src="res/icon/android/mipmap-hdpi/ic_launcher.png" />
-      <icon density="xhdpi" src="res/icon/android/mipmap-xhdpi/ic_launcher.png" />
-      <icon density="xxhdpi" src="res/icon/android/mipmap-xxhdpi/ic_launcher.png" />
-      <icon density="xxxhdpi" src="res/icon/android/mipmap-xxxhdpi/ic_launcher.png" />
+      <icon density="ldpi" src="res/icon/android/mipmap-ldpi/logo.png" />
+      <icon density="mdpi" src="res/icon/android/mipmap-mdpi/logo.png" />
+      <icon density="hdpi" src="res/icon/android/mipmap-hdpi/logo.png" />
+      <icon density="xhdpi" src="res/icon/android/mipmap-xhdpi/logo.png" />
+      <icon density="xxhdpi" src="res/icon/android/mipmap-xxhdpi/logo.png" />
+      <icon density="xxxhdpi" src="res/icon/android/mipmap-xxxhdpi/logo.png" />
     </platform>
 
 

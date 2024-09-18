@@ -21,16 +21,24 @@
       "latitude": 47.6217,
       "longitude": 26.2400,
       "logo": "../css/images/hotel_mandachi.jpg",
-      "google_page_url": "https://hotelmandachi.com/en/"
+      "google_page_url": "https://hotelmandachi.com/en/",
+      "rating": 4.3,
+      "address": "Bulevardul Sofia Vicoveanca 107, Suceava, Suceava, România",
+      "email": "office@hotelmandachi.ro",
+      "phone": "+40 330 111 999 / +40 753 169 300"
     },
     {
       "id": 2,
       "city_id": 2,
-      "name": "Continental",
+      "name": "Hotel Continental",
       "latitude": 47.6461,
       "longitude": 26.2554,
       "logo": "../css/images/continental_logo.jpg",
-      "google_page_url": "https://mycontinental-suceava.continentalhotels.ro/"
+      "google_page_url": "https://mycontinental-suceava.continentalhotels.ro/",
+      "rating": 4.1,
+      "address": "Strada Mihai Viteazul nr. 4, cod 720057, Suceava, România",
+      "email": "suceava@continentalhotels.ro",
+      "phone": "+40 372 304 904"
     },
     {
       "id": 3,
@@ -39,7 +47,11 @@
       "latitude": 47.6403,
       "longitude": 26.2632,
       "logo": "../css/images/hotel_balada.jpg",
-      "google_page_url": "https://hotelbalada.ro/"
+      "google_page_url": "https://hotelbalada.ro/",
+      "rating": 4.6,
+      "address": "Strada Mitropoliei, Numărul 5 720035, Suceava, România",
+      "email": "contact@hotelbalada.ro",
+      "phone": "+40 330 100 026"
     },
     {
       "id": 4,
@@ -48,7 +60,11 @@
       "latitude": 47.6428,
       "longitude": 26.2453,
       "logo": "../css/images/ceaunul_bunicii.png",
-      "google_page_url": "https://www.ceaunulbunicii.ro/"
+      "google_page_url": "https://www.ceaunulbunicii.ro/",
+      "rating": 4.4,
+      "address": "Strada Universității 42B, Suceava",
+      "email": "contact@ceaunulbunicii.ro",
+      "phone": "+40 749 430 418 / +40 771 066 540"
     },
     {
       "id": 5,
@@ -57,7 +73,11 @@
       "latitude": 47.6506,
       "longitude": 26.2548,
       "logo": "https://dummyimage.com/300",
-      "google_page_url": "https://casabucovineana.ro/"
+      "google_page_url": "https://casabucovineana.ro/",
+      "rating": 4.5,
+      "address": "Strada Petru Rareș 57B, Suceava 727525",
+      "email": "casabucovineana@gmail.com",
+      "phone": "0746 908 070 / 0744 211 833"
     },
     {
       "id": 6,
@@ -66,7 +86,11 @@
       "latitude": 47.6423,
       "longitude": 26.2573,
       "logo": "https://dummyimage.com/300",
-      "google_page_url": "https://www.tacolocosv.ro/"
+      "google_page_url": "https://www.tacolocosv.ro/",
+      "rating": 4.1,
+      "address": "Str. Vasile Bumbac 5A, Suceava",
+      "email": "office@tacolocosv.ro",
+      "phone": "0230 220 032 / 0748 220 032"
     },
     {
       "id": 7,
@@ -75,7 +99,11 @@
       "latitude": 47.6444,
       "longitude": 26.2611,
       "logo": "https://dummyimage.com/300",
-      "google_page_url": "https://www.restaurant-union.ro/"
+      "google_page_url": "https://www.restaurant-union.ro/",
+      "rating": 4.2,
+      "address": "Str. Ana Ipatescu Nr. 7, 720026 Suceava",
+      "email": "-",
+      "phone": "0737 001 913"
     }
   ]
 }

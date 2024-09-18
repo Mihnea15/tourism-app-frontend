@@ -20,6 +20,10 @@
                 <div class="block block-strong image_container" style="text-align: center; padding: 15px;">
                     <!-- Imaginea va fi adăugată dinamic aici -->
                 </div>
+                <!-- Rating-ul -->
+                <div class="block rating_container" style="text-align: center; padding: 10px;">
+                    <!-- Rating-ul va fi adăugat dinamic aici -->
+                </div>
                 <!-- Link-ul către pagina de Google -->
                 <div class="block google_page_container" style="text-align: center; padding: 10px;">
                     <!-- Link-ul va fi adăugat dinamic aici -->
@@ -28,6 +32,26 @@
                 <div class="block button_container" style="text-align: center; padding: 10px;">
                     <!-- Butonul va fi adăugat dinamic aici -->
                 </div>
+
+                <!-- Dropdown pentru detalii suplimentare -->
+                <div class="list accordion-list">
+                    <ul>
+                        <li class="accordion-item accordion-item-opened">
+                            <a href="#" class="item-link item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Contact Details</div>
+                                </div>
+                            </a>
+                            <div class="accordion-item-content">
+                                <div class="block">
+                                    <p><b><i class="icon f7-icons" style="font-size: 20px">map_fill</i></b> <span class="address"></span></p>
+                                    <p><b><i class="icon f7-icons" style="font-size: 20px">envelope_fill</i></b> <span class="email"></span></p>
+                                    <p><b><i class="icon f7-icons" style="font-size: 20px">phone_fill</i></b> <span class="phone"></span></p>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -35,9 +59,35 @@
 
 <script>
     let $$ = Dom7;
+
+    // Funcție pentru a crea stele pe baza rating-ului
+    function createStarRating(rating) {
+        const fullStars = Math.floor(rating); // Stele pline
+        const halfStar = rating % 1 >= 0.5; // Stea pe jumătate
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0); // Stele goale
+
+        let starHtml = '';
+
+        // Adaugă stelele pline
+        for (let i = 0; i < fullStars; i++) {
+            starHtml += '<i class="icon f7-icons color-yellow">star_fill</i>';
+        }
+
+        // Adaugă stea pe jumătate (dacă există)
+        if (halfStar) {
+            starHtml += '<i class="icon f7-icons color-yellow">star_lefthalf_fill</i>';
+        }
+
+        // Adaugă stelele goale
+        for (let i = 0; i < emptyStars; i++) {
+            starHtml += '<i class="icon f7-icons color-yellow">star</i>';
+        }
+
+        return starHtml;
+    }
+
     export default (props, { $on }) => {
         const businessDetails = props.businessDetails;
-        console.log(businessDetails)
 
         if (!businessDetails) {
             console.error('Business details not found.');
@@ -45,15 +95,42 @@
         }
 
         $on('pageInit', (e, page) => {
+            // Adaugă imaginea
             $$('.image_container').append(
-                '<img src="' + businessDetails.logo + '" alt="' + businessDetails.name + ' Logo" style="width: 100%; max-width: 300px; border-radius: 15px;">'
+                '<img src="' + businessDetails.logo + '" alt="' + businessDetails.name + ' Logo" style="width: 100%; max-width: 300px; border-radius: 0px;">'
             );
+
+            // Adaugă rating-ul cu stele
+            const ratingHtml = createStarRating(businessDetails.rating);
+            $$('.rating_container').append(
+                '<p><b>Rating:</b> ' + ratingHtml + ' (' + businessDetails.rating.toFixed(1) + ')</p>'
+            );
+
+            // Adaugă link-ul către pagina de Google
             $$('.google_page_container').append(
                 '<p><b>Google Page:</b> <a id="business-google-link" href="' + businessDetails.google_page_url + '" class="external button button-small button-outline">Visit ' + businessDetails.name + '</a></p>'
             );
+
+            // Adaugă butonul pentru direcții
             $$('.button_container').append(
-                '<a href="https://www.google.com/maps/dir/?api=1&destination=' + businessDetails.latitude + ',' + businessDetails.longitude + '" class="button button-fill color-green external">Get Directions</a>'
+                '<a href="https://www.google.com/maps/dir/?api=1&destination=' + businessDetails.latitude + ',' + businessDetails.longitude + '" class="external button button-fill color-green">Get directions</a>'
             );
+
+            // Adaugă detalii de contact în dropdown
+            $$('.address').html('<a href="https://www.google.com/maps/dir/?api=1&destination=' + businessDetails.latitude + ',' + businessDetails.longitude + '" class="external">' + businessDetails.address + '</a>');
+            $$('.email').html('<a href="mailto:' + businessDetails.email + '" class="external">' + businessDetails.email + '</a>');
+            if (businessDetails.phone.indexOf('/') > 0) {
+                let firstNumber = businessDetails.phone.split('/')[0].trim();
+                let secondNumber = businessDetails.phone.split('/')[1].trim();
+
+                $$('.phone').html(
+                    '<a href="tel:' + firstNumber + '" class="external">' + firstNumber + '</a>' +
+                    ' / ' +
+                    '<a href="tel:' + secondNumber + '" class="external">' + secondNumber + '</a>'
+                );
+            } else {
+                $$('.phone').html('<a href="tel:' + businessDetails.phone.trim() + '" class="external">' + businessDetails.phone.trim() + '</a>');
+            }
         });
 
         return $render;
