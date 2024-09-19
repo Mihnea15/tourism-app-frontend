@@ -88,6 +88,44 @@ var routes = [
         },
     },
     {
+        name: 'favourites',
+        path: '/favourites/',
+        async: function ({app, to, from, resolve, reject}) {
+            app.preloader.show();
+
+            // Efectuează cererea pentru fișierul JSON
+            fetch('/js/data/cities_and_business.json')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    // Găsește afacerea în funcție de ID
+                    let businesses = data.business;
+
+                    app.preloader.hide();
+
+                    resolve(
+                        {
+                            componentUrl: './pages/favourites.html',
+                        },
+                        {
+                            props: {
+                                businesses: businesses,
+                            },
+                        }
+                    );
+                })
+                .catch((err) => {
+                    console.error(err);
+                    app.preloader.hide();
+                    reject(); // Gestionare eroare
+                });
+        },
+    },
+    {
         path: '/about/',
         url: './pages/about.html',
     },

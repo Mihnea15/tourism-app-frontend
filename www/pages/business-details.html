@@ -18,6 +18,9 @@
             <div class="card">
                 <!-- Slideshow pentru imagini (inclusiv logo-ul) -->
                 <swiper-container pagination class="demo-swiper-multiple" space-between="50" id="swiper"></swiper-container>
+                <button class="button button-fill" id="add_to_favourite" value="${businessDetails.favourite}" style="border-radius: 100%; width: 15%; height: 7%; position: absolute; top: 41%; z-index: 9; right: 0">
+                    <i class="icon f7-icons" style="color: red">${businessDetails.favourite == 1 ? 'heart_fill' : 'heart'}</i>
+                </button>
 
                 <!-- Rating-ul -->
                 <div class="block rating_container" style="text-align: center; padding: 10px;">
@@ -85,8 +88,21 @@
         return starHtml;
     }
 
+    function addToFavourite(el, bussinesDetails) {
+        if ($$(el).attr('value') == 0) {
+            $$(el).children().text('heart_fill');
+            $$(el).attr('value', 1);
+            bussinesDetails.favourite = 1;
+        } else {
+            $$(el).children().text('heart');
+            $$(el).attr('value', 0);
+            bussinesDetails.favourite = 0;
+        }
+        store.dispatch('addBusinessDetails', bussinesDetails);
+    }
+
     export default (props, { $on }) => {
-        const businessDetails = props.businessDetails;
+        let businessDetails = props.businessDetails;
 
         if (!businessDetails) {
             console.error('Business details not found.');
@@ -94,13 +110,17 @@
         }
 
         $on('pageInit', (e, page) => {
+            $$('#add_to_favourite').on('click', function() {
+                addToFavourite(this, businessDetails);
+            });
+
             // Adaugă imaginea
             $$('#swiper').append(
                 '<img src="' + businessDetails.logo + '" alt="' + businessDetails.name + ' Logo" style="width: 100%; max-width: 328px; border-radius: 0px; margin-right: 50px">'
             );
             for (let i = 0; i < businessDetails.images.length; i++) {
                 $$('#swiper').append(
-                    '<swiper-slide><img src="' + businessDetails.images[i] + '" alt="' + businessDetails.name + ' Image ' + (i + 1) + '" style="max-width: 328px;"></swiper-slide>'
+                    '<swiper-slide><img src="' + businessDetails.images[i] + '" alt="' + businessDetails.name + ' Image ' + (i + 1) + '" style="max-width: 328px; height: 376px;"></swiper-slide>'
                 );
             }
 
@@ -117,7 +137,7 @@
 
             // Adaugă butonul pentru direcții
             $$('.button_container').append(
-                '<a href="https://www.google.com/maps/dir/?api=1&destination=' + businessDetails.latitude + ',' + businessDetails.longitude + '" class="external button button-fill color-green">Get directions</a>'
+                '<a href="https://www.google.com/maps/dir/?api=1&destination=' + businessDetails.latitude + ',' + businessDetails.longitude + '" class="external button button-fill">Get directions</a>'
             );
 
             // Adaugă detalii de contact în dropdown

@@ -3,4 +3,9 @@
   height: 100vh;
 }
 
+.active-tab {
+  background-color: #d9b9ff !important;
+  color: black !important;
+}
+
 /* Your app custom styles here */

@@ -25,20 +25,21 @@
         </div>
         <div class="navbar">
             <div class="navbar-bg"></div>
-            <div class="navbar-inner">
-                <div class="left">
+            <div class="navbar-inner width-100" style="display: flex; justify-content: center; align-items: center;">
+                <div class="left" style="position: absolute; left: 0;">
                     <a href="#" class="link icon-only panel-open" data-panel="left">
                         <i class="icon f7-icons if-not-md">menu</i>
                         <i class="icon material-icons if-md">menu</i>
                     </a>
                 </div>
+                <div class="title" style="margin: 0 auto;">Tourism Made Easy</div>
             </div>
         </div>
         <!-- Page Content -->
         <div class="page-content">
             <div class="list list-strong-ios list-outline-ios list-dividers-ios">
                 <!-- Select pentru orașe -->
-                <a href="#" class="item-link smart-select smart-select-init" data-open-in="sheet">
+                <a href="#" class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-searchbar-placeholder="Search for a city...">
                     <select name="select-cities">
                         ${cities.map((city) => $h`
                         <option value="${city.id}">${city.name}</option>
@@ -68,10 +69,23 @@
 
             <!-- Card pentru harta -->
             <div class="card padding-left-half padding-right-half" style="position: relative;">
-                <div id="map" style="height: 250px; border-radius: 15px; position: relative;"></div>
+                <div id="map" style="height: 470px; border-radius: 15px; position: relative;"></div>
                 <div id="drag-control" style="width: 30px; height: 30px; position: absolute; bottom: 14px; right: 6px; cursor: ns-resize; border-radius: 17px; background-color: #cccccc00; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                    <i class="icon f7-icons" style="transform: rotate(90deg); color: #67ea80">arrow_up_left_arrow_down_right</i>
+                    <i class="icon f7-icons" style="transform: rotate(90deg); color: black">arrow_up_left_arrow_down_right</i>
                 </div>
+            </div>
+        </div>
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="/" class="tab-link active-tab" data-route-tab-id="home">
+                    <i class="icon f7-icons">house_fill</i>
+                </a>
+                <a href="/favourites/" class="tab-link" data-route-tab-id="favourites">
+                    <i class="icon f7-icons" style="color: red!important;">heart</i>
+                </a>
+                <a href="/" class="tab-link" data-route-tab-id="profile">
+                    <i class="icon f7-icons">person_circle</i>
+                </a>
             </div>
         </div>
     </div>
@@ -88,6 +102,8 @@
         let isDragging = false; // Variabilă pentru a monitoriza starea "dragging"
 
         $on('pageInit', () => {
+            $$('.tab-link-highlight').remove();
+
             if (cities.length > 0) {
                 initMap(cities[0].latitude, cities[0].longitude, cities[0].name);
             }

@@ -1,0 +1,92 @@
+<template>
+    <!-- Componentele și conținutul paginii trebuie să fie HTML valid -->
+    <div class="page" data-name="home">
+        <!-- Left panel with cover effect-->
+        <div class="panel panel-left panel-cover dark panel-init">
+            <div class="view">
+                <div class="page">
+                    <div class="navbar">
+                        <div class="navbar-bg"></div>
+                        <div class="navbar-inner">
+                            <div class="title">Tourism Made Easy</div>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="block">
+                            <div class="row">
+                                <a href="/" class="button button-fill text-color-white" style="width: 40px; background-color: #5d5d5da1;">
+                                    <i class="icon material-icons if-md">house_fill</i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link icon-only panel-open" data-panel="left">
+                        <i class="icon f7-icons if-not-md">menu</i>
+                        <i class="icon material-icons if-md">menu</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Page Content -->
+        <div class="page-content">
+            ${businesses.map((business) => $h`
+                ${business.favourite == 1 ? $h`
+                    <div class="card" @click=${e => redirectToBusinessDetails(`${business.id}`)}>
+                        <div class="display-flex justify-content-space-between align-items-center">
+                            <div class="card-header">${business.name}</div>
+                            <div class="logo_${business.id}"></div>
+                        </div>
+                        <div class="card-content card-content-padding">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=${business.latitude},${business.longitude}" class="external">${business.address}</a>
+                        </div>
+                    </div>
+                ` : ''}
+            `)}
+        </div>
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="/" class="tab-link" data-route-tab-id="home">
+                    <i class="icon f7-icons">house_fill</i>
+                </a>
+                <a href="/favourites/" class="tab-link active-tab" data-route-tab-id="favourites">
+                    <i class="icon f7-icons" style="color: red!important;">heart_fill</i>
+                </a>
+                <a href="/" class="tab-link" data-route-tab-id="profile">
+                    <i class="icon f7-icons">person_circle</i>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    let $$ = Dom7;
+    export default (props, { $on, $f7 }) => {
+        const businesses = props.businesses;
+
+        function redirectToBusinessDetails(id) {
+            $f7.views.main.router.navigate(`/business-details/${id}`);
+        }
+
+        $on('pageInit', (e, page) => {
+            setTimeout(function () {
+                $$('.tab-link-highlight').remove();
+            }, 100);
+
+            for (let i = 0; i < businesses.length; i++) {
+                $$('.logo_' + businesses[i].id).append(
+                    '<img class="margin-right" src="' + businesses[i].logo + '" alt="' + businesses[i].name + ' Logo" style="width: 50px; height: 50px; border-radius: 25px;"">'
+                );
+            }
+        })
+
+        return $render;
+    };
+</script>
