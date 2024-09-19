@@ -118,23 +118,6 @@
         return starHtml;
     }
 
-    function isOpen(openingHour, closingHour) {
-        const now = new Date();
-        // Convertim orele de deschidere și închidere în ore și minute
-        const [openHour, openMinute] = openingHour.split(':').map(Number);
-        const [closeHour, closeMinute] = closingHour.split(':').map(Number);
-
-        // Creăm datele pentru orele de deschidere și închidere
-        const openingTime = new Date(now);
-        openingTime.setHours(openHour, openMinute, 0, 0);
-
-        const closingTime = new Date(now);
-        closingTime.setHours(closeHour, closeMinute, 0, 0);
-
-        // Verificăm dacă ora curentă este între ora de deschidere și închidere
-        return now >= openingTime && now <= closingTime ? '<br>Today: <span class="badge color-green">Open</span>' : '<br>Today: <span class="badge color-red">Closed</span>';
-    }
-
     function addToFavourite(el, bussinesDetails) {
         if ($$(el).attr('value') == 0) {
             $$(el).children().text('heart_fill');
@@ -166,7 +149,7 @@
                 addToFavourite(this, businessDetails);
             });
 
-            $$('#is_open').html(isOpen(businessDetails.opening_hour, businessDetails.closing_hour));
+            $$('#is_open').html(isOpen(businessDetails.opening_hour, businessDetails.closing_hour, true));
 
             // Adaugă imaginea
             $$('#swiper').append(

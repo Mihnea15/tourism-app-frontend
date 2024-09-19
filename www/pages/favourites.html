@@ -43,6 +43,7 @@
                             <div class="card-header">${business.name}</div>
                             <div class="logo_${business.id}"></div>
                         </div>
+                        <div class="block" style="color: #b0b0b0" id="is_open_${business.id}"></div>
                         <div class="card-content card-content-padding">
                             <a href="https://www.google.com/maps/dir/?api=1&destination=${business.latitude},${business.longitude}" class="external">${business.address}</a>
                         </div>
@@ -78,7 +79,11 @@
         $on('pageInit', (e, page) => {
             setTimeout(function () {
                 $$('.tab-link-highlight').remove();
-            }, 100);
+
+                for (let i = 0; i <= businesses.length; i++) {
+                    $$('#is_open_' + businesses[i].id).html(isOpen(businesses[i].opening_hour, businesses[i].closing_hour, true));
+                }
+            }, 50);
 
             for (let i = 0; i < businesses.length; i++) {
                 $$('.logo_' + businesses[i].id).append(

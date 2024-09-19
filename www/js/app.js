@@ -47,3 +47,21 @@ $('#my-login-screen .login-button').on('click', function () {
     // Alert username and password
     app.dialog.alert('Username: ' + username + '<br/>Password: ' + password);
 });
+
+function isOpen(openingHour, closingHour, newLine = false) {
+    const now = new Date();
+    // Convertim orele de deschidere și închidere în ore și minute
+    const [openHour, openMinute] = openingHour.split(':').map(Number);
+    const [closeHour, closeMinute] = closingHour.split(':').map(Number);
+
+    // Creăm datele pentru orele de deschidere și închidere
+    const openingTime = new Date(now);
+    openingTime.setHours(openHour, openMinute, 0, 0);
+
+    const closingTime = new Date(now);
+    closingTime.setHours(closeHour, closeMinute, 0, 0);
+
+    let isOpen = now >= openingTime && now <= closingTime ? 'Today: <span class="badge color-green">Open</span>' : 'Today: <span class="badge color-red">Closed</span>';
+
+    return newLine == true ? '<br>' + isOpen : isOpen;
+}
