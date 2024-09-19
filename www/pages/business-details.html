@@ -18,7 +18,8 @@
             <div class="card">
                 <!-- Slideshow pentru imagini (inclusiv logo-ul) -->
                 <swiper-container pagination class="demo-swiper-multiple" space-between="50" id="swiper"></swiper-container>
-                <button class="button button-fill" id="add_to_favourite" value="${businessDetails.favourite}" style="border-radius: 100%; width: 15%; height: 7%; position: absolute; top: 41%; z-index: 9; right: 0">
+                <button class="button button-fill" id="add_to_favourite" value="${businessDetails.favourite}"
+                        style="border-radius: 100%; width: 50px; height: 50px; position: absolute; top: 325px; right: 7px; z-index: 9;">
                     <i class="icon f7-icons" style="color: red">${businessDetails.favourite == 1 ? 'heart_fill' : 'heart'}</i>
                 </button>
 
@@ -50,6 +51,35 @@
                                     <p><b><i class="icon f7-icons" style="font-size: 20px">envelope_fill</i></b> <span class="email"></span></p>
                                     <p><b><i class="icon f7-icons" style="font-size: 20px">phone_fill</i></b> <span class="phone"></span></p>
                                 </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="list accordion-list">
+                    <ul>
+                        <li class="accordion-item">
+                            <a href="#" class="item-link item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Location Details</div>
+                                </div>
+                            </a>
+                            <div class="accordion-item-content">
+                                <div class="block" style="color: #b0b0b0">${businessDetails.description}</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="list accordion-list">
+                    <ul>
+                        <li class="accordion-item">
+                            <a href="#" class="item-link item-content">
+                                <div class="item-inner">
+                                    <div class="item-title">Location Program</div>
+                                </div>
+                            </a>
+                            <div class="accordion-item-content">
+                                <div class="block" style="color: #b0b0b0" id="program"></div>
+                                <div class="block" style="color: #b0b0b0" id="is_open"></div>
                             </div>
                         </li>
                     </ul>
@@ -88,6 +118,23 @@
         return starHtml;
     }
 
+    function isOpen(openingHour, closingHour) {
+        const now = new Date();
+        // Convertim orele de deschidere și închidere în ore și minute
+        const [openHour, openMinute] = openingHour.split(':').map(Number);
+        const [closeHour, closeMinute] = closingHour.split(':').map(Number);
+
+        // Creăm datele pentru orele de deschidere și închidere
+        const openingTime = new Date(now);
+        openingTime.setHours(openHour, openMinute, 0, 0);
+
+        const closingTime = new Date(now);
+        closingTime.setHours(closeHour, closeMinute, 0, 0);
+
+        // Verificăm dacă ora curentă este între ora de deschidere și închidere
+        return now >= openingTime && now <= closingTime ? '<br>Today: <span class="badge color-green">Open</span>' : '<br>Today: <span class="badge color-red">Closed</span>';
+    }
+
     function addToFavourite(el, bussinesDetails) {
         if ($$(el).attr('value') == 0) {
             $$(el).children().text('heart_fill');
@@ -103,6 +150,8 @@
 
     export default (props, { $on }) => {
         let businessDetails = props.businessDetails;
+        const date = new Date();
+        const time = date.getHours() + ':' + date.getMinutes();
 
         if (!businessDetails) {
             console.error('Business details not found.');
@@ -110,9 +159,14 @@
         }
 
         $on('pageInit', (e, page) => {
+            const formattedProgram = businessDetails.program.replace(/\n/g, '<br>');
+            $$('#program').html(formattedProgram);
+
             $$('#add_to_favourite').on('click', function() {
                 addToFavourite(this, businessDetails);
             });
+
+            $$('#is_open').html(isOpen(businessDetails.opening_hour, businessDetails.closing_hour));
 
             // Adaugă imaginea
             $$('#swiper').append(
