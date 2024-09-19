@@ -16,10 +16,9 @@
         <!-- Page Content -->
         <div class="page-content">
             <div class="card">
-                <!-- Imaginea Business -->
-                <div class="block block-strong image_container" style="text-align: center; padding: 15px;">
-                    <!-- Imaginea va fi adăugată dinamic aici -->
-                </div>
+                <!-- Slideshow pentru imagini (inclusiv logo-ul) -->
+                <swiper-container pagination class="demo-swiper-multiple" space-between="50" id="swiper"></swiper-container>
+
                 <!-- Rating-ul -->
                 <div class="block rating_container" style="text-align: center; padding: 10px;">
                     <!-- Rating-ul va fi adăugat dinamic aici -->
@@ -96,14 +95,19 @@
 
         $on('pageInit', (e, page) => {
             // Adaugă imaginea
-            $$('.image_container').append(
-                '<img src="' + businessDetails.logo + '" alt="' + businessDetails.name + ' Logo" style="width: 100%; max-width: 300px; border-radius: 0px;">'
+            $$('#swiper').append(
+                '<img src="' + businessDetails.logo + '" alt="' + businessDetails.name + ' Logo" style="width: 100%; max-width: 328px; border-radius: 0px; margin-right: 50px">'
             );
+            for (let i = 0; i < businessDetails.images.length; i++) {
+                $$('#swiper').append(
+                    '<swiper-slide><img src="' + businessDetails.images[i] + '" alt="' + businessDetails.name + ' Image ' + (i + 1) + '" style="max-width: 328px;"></swiper-slide>'
+                );
+            }
 
             // Adaugă rating-ul cu stele
             const ratingHtml = createStarRating(businessDetails.rating);
             $$('.rating_container').append(
-                '<p><b>Rating:</b> ' + ratingHtml + ' (' + businessDetails.rating.toFixed(1) + ')</p>'
+                '<p><b>Rating:</b> ' + ratingHtml + ' <a href="' + businessDetails.reviews + '" class="external">(' + businessDetails.rating.toFixed(1) + ')</a></p>'
             );
 
             // Adaugă link-ul către pagina de Google

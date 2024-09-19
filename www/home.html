@@ -69,8 +69,9 @@
             <!-- Card pentru harta -->
             <div class="card padding-left-half padding-right-half" style="position: relative;">
                 <div id="map" style="height: 250px; border-radius: 15px; position: relative;"></div>
-                <!-- Drag control pentru redimensionare -->
-                <div id="drag-control" style="width: 50px; height: 43px; background-color: #cccccc00; position: absolute; bottom: 0px; right: -2px; cursor: ns-resize; border-radius: 17px;"></div>
+                <div id="drag-control" style="width: 30px; height: 30px; position: absolute; bottom: 14px; right: 6px; cursor: ns-resize; border-radius: 17px; background-color: #cccccc00; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                    <i class="icon f7-icons" style="transform: rotate(90deg); color: #67ea80">arrow_up_left_arrow_down_right</i>
+                </div>
             </div>
         </div>
     </div>
@@ -222,10 +223,11 @@
                     });
 
                     const marker = L.marker([b.latitude, b.longitude], { icon: customIcon }).addTo(map);
+                    const formattedName = formatBusinessName(b.name);
                     const popupContent = `
                         <div style="text-align: center;">
                             <img src="${b.logo}" alt="${b.name}" style="width: 50px; height: 50px; border-radius: 25px; background-color: black;">
-                            <h3>${b.name}</h3>
+                            <h3>${formattedName}</h3>
                             <a class="button button-small" href="/business-details/${b.id}" id="go-to-details-${b.id}">Go to Details</a>
                             <a class="button button-small external" href="${b.google_page_url}">Google Page</a>
                         </div>
@@ -237,6 +239,15 @@
             } else {
                 businessSelectContainer.style.display = 'none';
             }
+        }
+
+        function formatBusinessName(name) {
+            const words = name.split(' ');
+
+            if (words.length >= 3) {
+                return words[0] + '<br>' + words.slice(1).join(' ');
+            }
+            return name;
         }
 
         return $render;

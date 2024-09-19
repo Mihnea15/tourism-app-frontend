@@ -29,7 +29,7 @@
     "leaflet": "^1.9.4",
     "material-icons": "^1.13.12",
     "skeleton-elements": "^4.0.1",
-    "swiper": "^11.1.12"
+    "swiper": "^11.1.14"
   },
   "devDependencies": {
     "cpy": "^11.1.0",
