@@ -7,7 +7,8 @@ var routes = [
             app.preloader.show();
 
             // Efectuează cererea pentru fișierul JSON
-            fetch('/js/data/cities_and_business.json')
+            console.log('a')
+            fetch(`${apiEntryPoint}api-cities`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -53,7 +54,7 @@ var routes = [
             app.preloader.show();
 
             // Efectuează cererea pentru fișierul JSON
-            fetch('/js/data/cities_and_business.json')
+            fetch(`${apiEntryPoint}api-business`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -94,7 +95,7 @@ var routes = [
             app.preloader.show();
 
             // Efectuează cererea pentru fișierul JSON
-            fetch('/js/data/cities_and_business.json')
+            fetch(`${apiEntryPoint}api-business`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);

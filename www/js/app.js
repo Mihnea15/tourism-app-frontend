@@ -50,7 +50,6 @@ $('#my-login-screen .login-button').on('click', function () {
 
 function isOpen(openingHour, closingHour, newLine = false) {
     const now = new Date();
-    // Convertim orele de deschidere și închidere în ore și minute
     const [openHour, openMinute] = openingHour.split(':').map(Number);
     const [closeHour, closeMinute] = closingHour.split(':').map(Number);
 
