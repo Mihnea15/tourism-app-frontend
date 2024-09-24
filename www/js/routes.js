@@ -7,7 +7,6 @@ var routes = [
             app.preloader.show();
 
             // Efectuează cererea pentru fișierul JSON
-            console.log('a')
             fetch(`${apiEntryPoint}api-cities`)
                 .then((response) => {
                     if (!response.ok) {

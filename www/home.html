@@ -102,10 +102,9 @@
         let isDragging = false; // Variabilă pentru a monitoriza starea "dragging"
 
         $on('pageInit', () => {
-            $$('.tab-link-highlight').remove();
 
             if (cities.length > 0) {
-                initMap(cities[0].latitude, cities[0].longitude, cities[0].name);
+                 initMap(cities[0].latitude, cities[0].longitude, cities[0].name);
             }
 
             for (let i = 0; i < business.length; i++) {
@@ -122,7 +121,7 @@
                     const selectedCity = cities.find((city) => city.id == selectedCityId);
 
                     if (selectedCity) {
-                        document.getElementById('selected-city').textContent = selectedCity.name;
+                        $$('#selected-city').textContent = selectedCity.name;
                         updateMap(selectedCity.latitude, selectedCity.longitude, selectedCity.name);
                         updateBusinesses(selectedCityId);
                     }
@@ -130,8 +129,8 @@
             }
 
             // Event listener pentru selectarea business-urilor
-            const businessSelect = document.getElementById('select-businesses');
-            businessSelect.addEventListener('change', (event) => {
+            const businessSelect = $$('#select-businesses');
+            businessSelect.on('change', (event) => {
                 const selectedBusinessId = event.target.value;
                 const selectedMarker = markers[selectedBusinessId];
 
@@ -142,44 +141,44 @@
             });
 
             // Event listener pentru "drag control"
-            const dragControl = document.getElementById('drag-control');
+            const dragControl = $$('#drag-control');
 
             // Evenimente pentru mouse
-            dragControl.addEventListener('mousedown', (event) => {
+            dragControl.on('mousedown', (event) => {
                 isDragging = true;
                 event.preventDefault();
             });
 
-            document.addEventListener('mousemove', (event) => {
+            $$(document).on('mousemove', (event) => {
                 if (isDragging) {
                     adjustMapHeight(event.clientY);
                 }
             });
 
-            document.addEventListener('mouseup', () => {
+            $$(document).on('mouseup', () => {
                 isDragging = false;
             });
 
             // Evenimente pentru dispozitive tactile
-            dragControl.addEventListener('touchstart', (event) => {
+            dragControl.on('touchstart', (event) => {
                 isDragging = true;
                 event.preventDefault();
             });
 
-            document.addEventListener('touchmove', (event) => {
+            $$(document).on('touchmove', (event) => {
                 if (isDragging) {
                     const touch = event.touches[0];
                     adjustMapHeight(touch.clientY);
                 }
             });
 
-            document.addEventListener('touchend', () => {
+            $$(document).on('touchend', () => {
                 isDragging = false;
             });
         });
 
         function adjustMapHeight(positionY) {
-            const mapElement = document.getElementById('map');
+            const mapElement = $$('#map');
             const newHeight = positionY - mapElement.getBoundingClientRect().top;
             if (newHeight > 200 && newHeight < 600) { // Limite pentru înălțimea hărții
                 mapElement.style.height = `${newHeight}px`;
@@ -194,7 +193,7 @@
 
             // Tile layer cu tema "light" de la CartoDB Positron
             L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                // attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
                 maxZoom: 18
             }).addTo(map);
         }
@@ -210,20 +209,20 @@
         function updateBusinesses(cityId) {
             const filteredBusinesses = business.filter((b) => b.city_id == cityId);
 
-            const businessSelect = document.getElementById('select-businesses');
-            const businessSelectContainer = document.getElementById('business-select-container');
+            const businessSelect = $$('#select-businesses');
+            const businessSelectContainer = $$('#business-select-container');
 
             // Golește opțiunile din selectul pentru business-uri
             businessSelect.innerHTML = '';
             markers = {}; // Resetează markerii anteriori
 
             if (filteredBusinesses.length > 0) {
-                businessSelectContainer.style.display = 'block';
+                businessSelectContainer.css('display', 'block');
                 filteredBusinesses.forEach((b) => {
                     const option = document.createElement('option');
                     option.value = b.id;
                     option.textContent = b.name;
-                    businessSelect.appendChild(option);
+                    businessSelect.append(option);
 
                     const markerHtml = `
                         <div style="position: relative; width: 35px; height: 61px;">
