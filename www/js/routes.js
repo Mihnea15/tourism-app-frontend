@@ -126,6 +126,11 @@ var routes = [
         },
     },
     {
+        name: 'login',
+        path: '/login/',
+        componentUrl: './pages/login.html',
+    },
+    {
         path: '/about/',
         url: './pages/about.html',
     },

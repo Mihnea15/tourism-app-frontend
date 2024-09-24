@@ -90,6 +90,26 @@ var cordovaApp = {
             false,
         );
     },
+
+    isUserRegistered: function () {
+        return new Promise((resolve, reject) => {
+            if (localStorage.getItem('user_token') !== null &&
+                localStorage.getItem('user_token').length === 32 &&
+                localStorage.getItem('user_id') !== null &&
+                !isNaN(parseInt(localStorage.getItem('user_id')))
+            ) {
+                app.params.isUserAuthenticated = true;
+                return resolve(localStorage.getItem('userToken'))
+            }
+
+            // make sure no trash data are set in LS
+            localStorage.removeItem('user_id');
+            localStorage.removeItem('user_token');
+            //the reject
+            console.log('Missing user_token or user_id, we should register this user');
+            return reject('Missing user_token or user_id, we should register this user')
+        })
+    },
     /*
     This method does the following:
       - provides cross-platform view "shrinking" on keyboard open/close
@@ -155,8 +175,15 @@ var cordovaApp = {
 
             // Handle Keyboard
             cordovaApp.handleKeyboard();
-            app.views.create('.view-main', {
-                url: '/'
+            cordovaApp.isUserRegistered()
+                .then(() => {
+                    app.views.create('.view-main', {
+                        url: '/'
+                    });
+                }).catch(() => {
+                app.views.create('.view-main', {
+                    url: '/login/'
+                });
             });
         });
     },
