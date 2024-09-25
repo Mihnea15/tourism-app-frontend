@@ -14,9 +14,7 @@
                     <div class="page-content">
                         <div class="block">
                             <div class="row">
-                                <a href="/" class="button button-fill text-color-white" style="width: 40px; background-color: #5d5d5da1;">
-                                    <i class="icon material-icons if-md">house_fill</i>
-                                </a>
+                                <button class="button button-fill" style="background-color: red" @click=${disconnect}>Disconnect</button>
                             </div>
                         </div>
                     </div>
@@ -104,7 +102,9 @@
         $on('pageInit', () => {
 
             if (cities.length > 0) {
-                 initMap(cities[0].latitude, cities[0].longitude, cities[0].name);
+                setTimeout(function () {
+                    initMap(cities[0].latitude, cities[0].longitude, cities[0].name);
+                }, 500);
             }
 
             for (let i = 0; i < business.length; i++) {
@@ -264,6 +264,11 @@
             }
             return name;
         }
+
+        const disconnect = () => {
+            localStorage.removeItem('user_id');
+            app.views.main.router.navigate('/login/');
+        };
 
         return $render;
     };

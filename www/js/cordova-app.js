@@ -1,4 +1,5 @@
 const apiEntryPoint = 'http://10.1.30.177:3000/';
+const $$ = Dom7;
 var cordovaApp = {
     f7: null,
     /*
@@ -93,9 +94,7 @@ var cordovaApp = {
 
     isUserRegistered: function () {
         return new Promise((resolve, reject) => {
-            if (localStorage.getItem('user_token') !== null &&
-                localStorage.getItem('user_token').length === 32 &&
-                localStorage.getItem('user_id') !== null &&
+            if (localStorage.getItem('user_id') !== null &&
                 !isNaN(parseInt(localStorage.getItem('user_id')))
             ) {
                 app.params.isUserAuthenticated = true;

@@ -1,0 +1,208 @@
+<style>
+    .page-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: space-between;
+    }
+</style>
+<template>
+    <div class="page login-page" data-name="login">
+        <!-- Page content -->
+        <div class="page-content login-screen-content flex-column">
+
+            <div class="login-screen-title">
+                <div id="logo-app"></div>
+            </div>
+            <div class="list no-margin-top no-margin margin-bottom-half flex-shrink-0" style="bottom: 10vh">
+                <p class="text-color-dark-gray text-align-center no-margin-bottom" style="position: relative; font-size: 15px">Please register to begin the session</p>
+                <ul>
+                    <li class="item-content item-input item-input-outline no-padding-left">
+                        <div class="item-inner padding">
+                            <div class="item-title item-floating-label floating-label">First Name</div>
+                            <div class="item-input-wrap">
+                                <input id="first_name" type="text" name="first_name" placeholder="First Name" value=""/>
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content item-input item-input-outline no-padding-left">
+                        <div class="item-inner padding">
+                            <div class="item-title item-floating-label floating-label">Last Name</div>
+                            <div class="item-input-wrap">
+                                <input id="last_name" type="text" name="last_name" placeholder="Last Name" value=""/>
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content item-input item-input-outline no-padding-left">
+                        <div class="item-inner padding">
+                            <div class="item-title item-floating-label floating-label">Email</div>
+                            <div class="item-input-wrap">
+                                <input id="email" type="email" name="email" placeholder="Email" value=""/>
+                                <span class="input-clear-button"></span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content item-input item-input-outline no-padding-left">
+                        <div class="item-inner padding">
+                            <div class="item-title item-floating-label floating-label">Password</div>
+                            <div class="item-input-wrap display-flex">
+                                <input id="password" type="password" name="password" placeholder="Password"
+                                       value="" style="width: 90%"/>
+                                <span>
+                                    <i class="f7-icons password_icon display-none text-color-dark-gray" style="vertical-align: middle; font-size: 20px!important;"
+                                       @click=${e => viewPassword()}>eye_fill</i>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="item-content item-input item-input-outline no-padding-left">
+                        <div class="item-inner padding">
+                            <div class="item-title item-floating-label floating-label">Repeat password</div>
+                            <div class="item-input-wrap display-flex">
+                                <input id="repeat_password" type="password" name="repeat_password" placeholder="Repeat password"
+                                       value="" style="width: 90%"/>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <button class="submit_login_form button button-fill button-large margin-right float-right padding-horizontal padding-horizontal width-auto button-preloader" @click=${e => register()}>
+                    Register
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+
+<script>
+    let $$ = Dom7;
+    let firstName = null;
+    let lastName = null;
+    let email = null;
+    let password = null;
+    let repeatPassword = null;
+    export default (props, {$on}) => {
+        $on('pageInit', () => {
+            $$('#logo-app').html('<img src="../css/images/app-icon.png" alt="Tourism Made Easy" style="width: 32vh; height: 32vh; margin: 0 auto;"/>');
+
+            const loginForm = $$('#login-form');
+
+            loginForm.on('submit', (event) => {
+                event.preventDefault();
+
+                // Preia datele din formular
+                const username = loginForm.username.value;
+                const password = loginForm.password.value;
+
+                // Validare simplă
+                if (username && password) {
+                    // Aici adaugi logica de autentificare (request către server, validare etc.)
+                    app.dialog.alert(`Logged in as: ${username}`);
+                } else {
+                    app.dialog.alert('Please enter your username and password.');
+                }
+            });
+
+            $$('#first_name').keyup(function () {
+                firstName = this.value;
+            });
+
+            $$('#last_name').keyup(function () {
+                lastName = this.value;
+            });
+
+            $$('#email').keyup(function () {
+                email = this.value;
+            });
+
+            $$('#password').keyup(function () {
+                password = this.value;
+                if (this.value.length > 0) {
+                    $('.password_icon').removeClass('display-none');
+                } else {
+                    $('.password_icon').addClass('display-none');
+                }
+            });
+
+            $$('#repeat_password').keyup(function () {
+                repeatPassword = this.value;
+                switch (true) {
+                    case this.value === '':
+                        $$('#repeat_password').parent().parent().css({'border': '0'});
+                        $$('.submit_login_form').prop('disabled', true);
+                        break;
+                    case this.value !== password:
+                        $$('#repeat_password').parent().parent().css({'border': '2px solid red', 'border-radius': '5px', 'z-index': '9999'});
+                        $$('.submit_login_form').prop('disabled', true).addClass('disabled');
+                        break;
+                    case this.value === password:
+                        $$('#repeat_password').parent().parent().css({'border': '2px solid green', 'border-radius': '5px', 'z-index': '9999'});
+                        $$('.submit_login_form').prop('disabled', false).removeClass('disabled');
+                        break;
+                }
+            });
+        });
+
+        const viewPassword = () => {
+            if ($$('#password').attr('type') === 'password') {
+                $$('#password').prop('type', 'text');
+                $$('.password_icon').text('eye_slash_fill');
+            } else if ($$('#password').attr('type') === 'text') {
+                $$('#password').prop('type', 'password');
+                $$('.password_icon').text('eye_fill');
+            }
+        }
+
+        const register = () => {
+            if (!firstName || !lastName || !email || !password || !repeatPassword) {
+                app.dialog.alert('All fields are required');
+                return;
+            }
+
+            if (password !== repeatPassword) {
+                app.dialog.alert('Passwords do not match');
+                return;
+            }
+
+            app.preloader.show();
+
+            fetch(`${apiEntryPoint}user/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    first_name: firstName,
+                    last_name: lastName,
+                    email: email,
+                    password: password,
+                }),
+            }).then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+            }).then((data) => {
+                // Gestionare răspuns succes
+                app.preloader.hide();
+                if (data.status === 'success') {
+                    app.dialog.alert('Registration successful');
+                    localStorage.setItem('user_id', data.user_id)
+                    app.views.main.router.navigate('/');
+                } else {
+                    app.dialog.alert(data.message);
+                }
+                console.log(data)
+            })
+            .catch((err) => {
+                console.error(err);
+                app.preloader.hide();
+                app.dialog.alert('Registration failed due to a network error');
+            });
+        }
+
+        return $render;
+    };
+</script>

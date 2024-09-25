@@ -26,7 +26,7 @@
                         <div class="item-inner padding">
                             <div class="item-title item-floating-label floating-label">Email</div>
                             <div class="item-input-wrap">
-                                <input type="text" name="email" placeholder="Email" value=""/>
+                                <input id="email" type="text" name="email" placeholder="Email" value=""/>
                                 <span class="input-clear-button"></span>
                             </div>
                         </div>
@@ -45,14 +45,14 @@
                         </div>
                     </li>
                 </ul>
-                <button class="submit_login_form button button-fill button-large margin-right float-right padding-horizontal padding-horizontal width-auto button-preloader">
+                <button class="submit_login_form button button-fill button-large margin-right float-right padding-horizontal padding-horizontal width-auto button-preloader" @click=${e => login()}>
                     Authentication
                 </button>
             </div>
             <!-- Block Footer fixed to bottom -->
             <div class="block-footer align-self-end">
                 <p><a href="#" class="link">Forgot your password?</a></p>
-                <p><a href="#" class="link">Create an account</a></p>
+                <p><a href="/register/" class="link">Create an account</a></p>
             </div>
         </div>
     </div>
@@ -60,8 +60,26 @@
 
 
 <script>
+    let password = null;
+    let email = null;
     export default (props, {$on}) => {
-        var $$ = Dom7;
+        $on('pageInit', () => {
+            $$('#logo-app').html('<img src="../css/images/app-icon.png" alt="Tourism Made Easy" style="width: 32vh; height: 32vh; margin: 0 auto;"/>');
+
+            $$('#password').keyup(() => {
+                password = $$('#password').val();
+                if ($$('#password').val() !== '') {
+                    $$('.password_icon').removeClass('display-none');
+                } else {
+                    $$('.password_icon').addClass('display-none');
+                }
+            });
+
+            $$('#email').keyup(() => {
+                email = $$('#email').val();
+            });
+        });
+
         const viewPassword = () => {
             if ($$('#password').attr('type') === 'password') {
                 $$('#password').prop('type', 'text');
@@ -72,35 +90,42 @@
             }
         }
 
-        $on('pageInit', () => {
-            $$('#logo-app').html('<img src="../css/images/app-icon.png" alt="Tourism Made Easy" style="width: 32vh; height: 32vh; margin: 0 auto;"/>');
-
-            const loginForm = $$('#login-form');
-
-            loginForm.on('submit', (event) => {
-                event.preventDefault();
-
-                // Preia datele din formular
-                const username = loginForm.username.value;
-                const password = loginForm.password.value;
-
-                // Validare simplă
-                if (username && password) {
-                    // Aici adaugi logica de autentificare (request către server, validare etc.)
-                    app.dialog.alert(`Logged in as: ${username}`);
-                } else {
-                    app.dialog.alert('Please enter your username and password.');
-                }
-            });
-
-            $$('#password').on('input', () => {
-                if ($$('#password').val() !== '') {
-                    $$('.password_icon').removeClass('display-none');
-                } else {
-                    $$('.password_icon').addClass('display-none');
-                }
-            });
-        });
+        const login = () => {
+            console.log(email, password);
+            if (email && password) {
+                fetch(`${apiEntryPoint}user/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                    }),
+                }).then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                }).then((data) => {
+                    // Gestionare răspuns succes
+                    app.preloader.hide();
+                    if (data.status === 'success') {
+                        localStorage.setItem('user_id', data.user_id)
+                        app.views.main.router.navigate('/');
+                    } else {
+                        app.dialog.alert(data.message);
+                    }
+                })
+                    .catch((err) => {
+                        console.error(err);
+                        app.preloader.hide();
+                        app.dialog.alert('Registration failed due to a network error');
+                    });
+            } else {
+                app.dialog.alert('Please enter your username and password.');
+            }
+        }
 
         return $render;
     };

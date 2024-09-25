@@ -131,6 +131,11 @@ var routes = [
         componentUrl: './pages/login.html',
     },
     {
+        name: 'register',
+        path: '/register/',
+        componentUrl: './pages/register.html',
+    },
+    {
         path: '/about/',
         url: './pages/about.html',
     },
