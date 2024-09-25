@@ -188,7 +188,6 @@
                 // Gestionare răspuns succes
                 app.preloader.hide();
                 if (data.status === 'success') {
-                    app.dialog.alert('Registration successful');
                     localStorage.setItem('user_id', data.user_id)
                     app.views.main.router.navigate('/');
                 } else {

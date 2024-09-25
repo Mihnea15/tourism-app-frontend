@@ -14,7 +14,7 @@
                     <div class="page-content">
                         <div class="block">
                             <div class="row">
-                                <button class="button button-fill" style="background-color: red" @click=${disconnect}>Disconnect</button>
+                                <button class="button button-fill panel-close" style="background-color: red" @click=${disconnect}>Disconnect</button>
                             </div>
                         </div>
                     </div>
@@ -100,6 +100,7 @@
         let isDragging = false; // Variabilă pentru a monitoriza starea "dragging"
 
         $on('pageInit', () => {
+            $$('.page-content').css('justify-content', 'flex-start');
 
             if (cities.length > 0) {
                 setTimeout(function () {
