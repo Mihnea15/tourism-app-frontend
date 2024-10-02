@@ -105,14 +105,10 @@
         $on('pageInit', (e, page) => {
             const formattedProgram = businessDetails.program.replace(/\n/g, '<br>');
             $$('#program').html(formattedProgram);
-
             $$('#is_open').html(isOpen(businessDetails.opening_hour, businessDetails.closing_hour, true));
 
-            // Adaugă imaginea
             const screenWidth = window.innerWidth;
-
             let imgWidth;
-
             if (screenWidth <= 600) {
                 imgWidth = '98vw';
             } else if (screenWidth > 600 && screenWidth <= 1024) {
@@ -121,7 +117,6 @@
                 imgWidth = '80vw';
             }
 
-            // Adăugăm imaginea logo-ului și imaginile din swiper cu dimensiuni dinamice
             $$('#swiper').append(
                 '<img src="' + businessDetails.logo + '" alt="' + businessDetails.name + ' Logo" style="max-width: ' + imgWidth + '; height: auto; display: block; margin: 0 auto;">'
             );
@@ -136,23 +131,19 @@
                 );
             }
 
-            // Adaugă rating-ul cu stele
             const ratingHtml = createStarRating(businessDetails.rating);
             $$('.rating_container').append(
                 '<p><b>Rating:</b> ' + ratingHtml + ' <a href="' + businessDetails.reviews + '" class="external">(' + businessDetails.rating + ')</a></p>'
             );
 
-            // Adaugă link-ul către pagina de Google
             $$('.google_page_container').append(
                 '<p><b>Google Page:</b> <a id="business-google-link" href="' + businessDetails.google_page_url + '" class="external button button-small button-outline">Visit ' + businessDetails.name + '</a></p>'
             );
 
-            // Adaugă butonul pentru direcții
             $$('.button_container').append(
                 '<a href="https://www.google.com/maps/dir/?api=1&destination=' + businessDetails.latitude + ',' + businessDetails.longitude + '" class="external button button-fill">Get directions</a>'
             );
 
-            // Adaugă detalii de contact în dropdown
             $$('.address').html('<a href="https://www.google.com/maps/dir/?api=1&destination=' + businessDetails.latitude + ',' + businessDetails.longitude + '" class="external">' + businessDetails.address + '</a>');
             $$('.email').html('<a href="mailto:' + businessDetails.email + '" class="external">' + businessDetails.email + '</a>');
             if (businessDetails.phone.indexOf('/') > 0) {
@@ -191,7 +182,6 @@
                 }
                 return response.json();
             }).then((data) => {
-                // Gestionare răspuns succes
                 app.preloader.hide();
                 if (data.status === 'success') {
                     $f7.toast.create({
