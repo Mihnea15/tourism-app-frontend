@@ -66,6 +66,7 @@ var routes = [
 
                     // Stochează detaliile afacerii în store
                     store.dispatch('addBusinessDetails', businessDetails);
+                    store.dispatch('addFavourites', data.favourites);
 
                     app.preloader.hide();
 
@@ -94,7 +95,7 @@ var routes = [
             app.preloader.show();
 
             // Efectuează cererea pentru fișierul JSON
-            fetch(`${apiEntryPoint}api-business`)
+            fetch(`${apiEntryPoint}api-business/get-favourites?userId=${localStorage.getItem('user_id')}`)
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -103,7 +104,7 @@ var routes = [
                 })
                 .then((data) => {
                     // Găsește afacerea în funcție de ID
-                    let businesses = data.business;
+                    let businesses = data;
 
                     app.preloader.hide();
 

@@ -19,7 +19,8 @@
                 <!-- Slideshow pentru imagini (inclusiv logo-ul) -->
                 <swiper-container pagination class="demo-swiper-multiple" space-between="50" id="swiper"></swiper-container>
                 <button class="button button-fill" id="add_to_favourite" value="${businessDetails.favourite}"
-                        style="border-radius: 100%; width: 50px; height: 50px; position: absolute; top: 354px; right: 7px; z-index: 9;">
+                        style="border-radius: 100%; width: 50px; height: 50px; position: absolute; top: 39vh; right: 1vh; z-index: 9;"
+                        @click=${addFavourite}>
                     <i class="icon f7-icons" style="color: red">${businessDetails.favourite == 1 ? 'heart_fill' : 'heart'}</i>
                 </button>
 
@@ -92,46 +93,7 @@
 <script>
     let $$ = Dom7;
 
-    // Funcție pentru a crea stele pe baza rating-ului
-    function createStarRating(rating) {
-        const fullStars = Math.floor(rating);
-        const halfStar = rating % 1 >= 0.5;
-        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-
-        let starHtml = '';
-
-        // Adaugă stelele pline
-        for (let i = 0; i < fullStars; i++) {
-            starHtml += '<i class="icon f7-icons color-yellow">star_fill</i>';
-        }
-
-        // Adaugă stea pe jumătate (dacă există)
-        if (halfStar) {
-            starHtml += '<i class="icon f7-icons color-yellow">star_lefthalf_fill</i>';
-        }
-
-        // Adaugă stelele goale
-        for (let i = 0; i < emptyStars; i++) {
-            starHtml += '<i class="icon f7-icons color-yellow">star</i>';
-        }
-
-        return starHtml;
-    }
-
-    function addToFavourite(el, bussinesDetails) {
-        if ($$(el).attr('value') == 0) {
-            $$(el).children().text('heart_fill');
-            $$(el).attr('value', 1);
-            bussinesDetails.favourite = 1;
-        } else {
-            $$(el).children().text('heart');
-            $$(el).attr('value', 0);
-            bussinesDetails.favourite = 0;
-        }
-        store.dispatch('addBusinessDetails', bussinesDetails);
-    }
-
-    export default (props, { $on }) => {
+    export default (props, { $on, $f7 }) => {
         let businessDetails = props.businessDetails;
         const date = new Date();
 
@@ -143,10 +105,6 @@
         $on('pageInit', (e, page) => {
             const formattedProgram = businessDetails.program.replace(/\n/g, '<br>');
             $$('#program').html(formattedProgram);
-
-            $$('#add_to_favourite').on('click', function() {
-                addToFavourite(this, businessDetails);
-            });
 
             $$('#is_open').html(isOpen(businessDetails.opening_hour, businessDetails.closing_hour, true));
 
@@ -168,16 +126,20 @@
                 '<img src="' + businessDetails.logo + '" alt="' + businessDetails.name + ' Logo" style="max-width: ' + imgWidth + '; height: auto; display: block; margin: 0 auto;">'
             );
 
-            for (let i = 0; i <= businessDetails.images.length; i++) {
+            for (let i = 0; i <= businessDetails.images.length + 1; i++) {
+                if (businessDetails.images[i] === undefined) {
+                    break;
+                }
+
                 $$('#swiper').append(
-                    '<swiper-slide><img src="' + businessDetails.images[i] + '" alt="' + businessDetails.name + ' Image ' + (i + 1) + '" style="max-width: ' + imgWidth + '; height: auto;"></swiper-slide>'
+                    '<swiper-slide><img src="' + businessDetails.images[i].image_path + '" alt="' + businessDetails.name + ' Image ' + (i + 1) + '" style="max-width: ' + imgWidth + '; height: 43vh;"></swiper-slide>'
                 );
             }
 
             // Adaugă rating-ul cu stele
             const ratingHtml = createStarRating(businessDetails.rating);
             $$('.rating_container').append(
-                '<p><b>Rating:</b> ' + ratingHtml + ' <a href="' + businessDetails.reviews + '" class="external">(' + businessDetails.rating.toFixed(1) + ')</a></p>'
+                '<p><b>Rating:</b> ' + ratingHtml + ' <a href="' + businessDetails.reviews + '" class="external">(' + businessDetails.rating + ')</a></p>'
             );
 
             // Adaugă link-ul către pagina de Google
@@ -207,6 +169,73 @@
             }
         });
 
+        const addFavourite = (e) => {
+            if (e.target.textContent === 'heart_fill') {
+                e.target.textContent = 'heart';
+            } else {
+                e.target.textContent = 'heart_fill';
+            }
+
+            fetch(`${apiEntryPoint}api-business/add-favourite`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    business_id: businessDetails.id,
+                    user_id: localStorage.getItem('user_id'),
+                }),
+            }).then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            }).then((data) => {
+                // Gestionare răspuns succes
+                app.preloader.hide();
+                if (data.status === 'success') {
+                    $f7.toast.create({
+                        text: data.message,
+                        closeButton: false,
+                        position: 'center',
+                        closeTimeout: 2000,
+                    }).open();
+                } else {
+                    app.dialog.alert(data.message);
+                }
+            }).catch((err) => {
+                console.error(err);
+                app.preloader.hide();
+                app.dialog.alert('Registration failed due to a network error');
+            });
+        };
+
         return $render;
     };
+
+    // Funcție pentru a crea stele pe baza rating-ului
+    function createStarRating(rating) {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+        let starHtml = '';
+
+        // Adaugă stelele pline
+        for (let i = 0; i < fullStars; i++) {
+            starHtml += '<i class="icon f7-icons color-yellow">star_fill</i>';
+        }
+
+        // Adaugă stea pe jumătate (dacă există)
+        if (halfStar) {
+            starHtml += '<i class="icon f7-icons color-yellow">star_lefthalf_fill</i>';
+        }
+
+        // Adaugă stelele goale
+        for (let i = 0; i < emptyStars; i++) {
+            starHtml += '<i class="icon f7-icons color-yellow">star</i>';
+        }
+
+        return starHtml;
+    }
 </script>

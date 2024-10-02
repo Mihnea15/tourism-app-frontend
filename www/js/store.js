@@ -4,6 +4,7 @@ const store = createStore({
         cities: [],
         business: [],
         businessDetails: [],
+        favourites: [],
     },
     getters: {
         cities({state}) {
@@ -15,6 +16,9 @@ const store = createStore({
         businessDetails({state}) {
             return state.businessDetails;
         },
+        favourites({state}) {
+            return state.favourites;
+        },
     },
     actions: {
         addCities({state}, cities) {
@@ -25,6 +29,9 @@ const store = createStore({
         },
         addBusinessDetails({state}, businessDetails) {
             state.businessDetails = [...state.businessDetails, businessDetails];
+        },
+        addFavourites({state}, favourites) {
+            state.favourites = [...state.favourites, favourites];
         },
     },
 })

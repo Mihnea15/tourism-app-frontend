@@ -86,7 +86,6 @@
         }
 
         const login = () => {
-            console.log(email, password);
             if (email && password) {
                 fetch(`${apiEntryPoint}user/login`, {
                     method: 'POST',
@@ -106,17 +105,18 @@
                     // Gestionare răspuns succes
                     app.preloader.hide();
                     if (data.status === 'success') {
-                        localStorage.setItem('user_id', data.user_id)
+                        localStorage.setItem('user_id', data.user_id);
+                        localStorage.setItem('username', data.username);
+                        localStorage.setItem('email', data.email);
                         app.views.main.router.navigate('/');
                     } else {
                         app.dialog.alert(data.message);
                     }
-                })
-                    .catch((err) => {
-                        console.error(err);
-                        app.preloader.hide();
-                        app.dialog.alert('Registration failed due to a network error');
-                    });
+                }).catch((err) => {
+                    console.error(err);
+                    app.preloader.hide();
+                    app.dialog.alert('Registration failed due to a network error');
+                });
             } else {
                 app.dialog.alert('Please enter your username and password.');
             }
