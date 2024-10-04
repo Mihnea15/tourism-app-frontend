@@ -127,6 +127,44 @@ var routes = [
         },
     },
     {
+        name: 'user-profile',
+        path: '/user-profile/',
+        async: function ({app, to, from, resolve, reject}) {
+            app.preloader.show();
+
+            // Efectuează cererea pentru fișierul JSON
+            fetch(`${apiEntryPoint}user/get-user-data?userId=${localStorage.getItem('user_id')}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    // Găsește afacerea în funcție de ID
+                    let user = data;
+
+                    app.preloader.hide();
+
+                    resolve(
+                        {
+                            componentUrl: './pages/user.html',
+                        },
+                        {
+                            props: {
+                                user: user,
+                            },
+                        }
+                    );
+                })
+                .catch((err) => {
+                    console.error(err);
+                    app.preloader.hide();
+                    reject(); // Gestionare eroare
+                });
+        },
+    },
+    {
         name: 'login',
         path: '/login/',
         componentUrl: './pages/login.html',

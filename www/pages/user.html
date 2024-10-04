@@ -1,0 +1,114 @@
+<template>
+    <div class="page" data-name="user-details">
+        <!-- Navbar -->
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="back link">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title" id="username" style="font-size: 20px;">${user.first_name} ${user.last_name}</div>
+            </div>
+        </div>
+        <!-- Page Content -->
+        <div class="page-content">
+            <div class="card">
+                <div class="card-header display-flex">
+                    <div class="profile_picture"></div>
+                    <div class="profile_details width-100"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="update_profile_pic" class="sheet-modal demo-sheet-swipe-to-close" style="height:auto">
+            <div class="sheet-modal-inner">
+                <div class="swipe-handler"></div>
+                <div class="page-content">
+                    <div class="block-title block-title-large">Update profile picture</div>
+                    <div class="block profile-pic-upload"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default (props, { $on, $f7 }) => {
+        let user = props.user;
+
+        $on('pageInit', (e, page) => {
+            if (user.profile_picture != null) {
+                $$('.profile_picture').append('<img class="user_photo" src="' + user.profile_picture + '" style="height: 15vh; border-radius: 100px"/>');
+            } else {
+                $$('.profile_picture').append('<img class="user_photo" src="../css/images/profile_pic.jpg" style="height: 15vh; border-radius: 100px"/>');
+            }
+
+            $$('.profile_details').append(`
+                <div style="margin-left: 10px; font-size: 20px;">` + user.first_name + ' ' + user.last_name + `</div>
+                <div style="margin-left: 10px; font-size: 10px;">` + user.email + `</div>
+            `);
+
+            $$('.user_photo').on('click', () => {
+                addPhoto();
+            });
+
+            $$('.profile-pic-upload').append('<input class="button button-big button-fill display-none" type="file" id="_file"><button class="button-fill button" id="upload">Upload</button>');
+            $$('#upload').on('click', function () {
+                $$('#_file').click();
+            });
+
+            $$('#_file').on('change', function () {
+                sendPhotoToBackend(this);
+            });
+
+        });
+
+        return $render;
+    };
+
+    function addPhoto() {
+        app.sheet.create({
+            el: '#update_profile_pic',
+            swipeToClose: true,
+        }).open();
+    }
+
+    function sendPhotoToBackend(el) {
+        const file = el.files[0];
+        const userId = localStorage.getItem('user_id');
+
+        if (file) {
+            // Creează un obiect FormData pentru a trimite fișierul către backend
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('user_id', userId);
+
+            // Trimitem fișierul către backend folosind fetch
+            fetch(`${apiEntryPoint}user/upload-user-photo`, {
+                method: 'POST',
+                body: formData, // Folosește FormData în loc de JSON.stringify
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    // Gestionare răspuns succes
+                    app.preloader.hide();
+                    console.log(data);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    app.preloader.hide();
+                    app.dialog.alert('Încărcarea fișierului a eșuat din cauza unei erori de rețea');
+                });
+        } else {
+            console.error('Niciun fișier selectat.');
+        }
+    }
+</script>
