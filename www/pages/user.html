@@ -21,6 +21,10 @@
                     <div class="profile_details width-100"></div>
                 </div>
             </div>
+            <div>
+                <button class="button button-fill margin-left" id="update_password_btn" style="width: 91%">Reset Password</button>
+                <button class="button button-fill button-danger margin-left margin-top" style="width: 91%">Log out</button>
+            </div>
         </div>
 
         <div id="update_profile_pic" class="sheet-modal demo-sheet-swipe-to-close" style="height:auto">
@@ -40,31 +44,47 @@
         let user = props.user;
 
         $on('pageInit', (e, page) => {
-            if (user.profile_picture != null) {
-                $$('.profile_picture').append('<img class="user_photo" src="' + user.profile_picture + '" style="height: 15vh; border-radius: 100px"/>');
-            } else {
+            // if (user.profile_picture != null) {
+                // console.log(user.profile_picture)
+                // const sanitizedBase64 = user.profile_picture.replace(/\s/g, '');
+                // $$('.profile_picture').append('<img class="user_photo" src="' + sanitizedBase64 + '" style="height: 15vh; width: 15vh; border-radius: 50%; object-fit: cover;"/>');
+            // } else {
                 $$('.profile_picture').append('<img class="user_photo" src="../css/images/profile_pic.jpg" style="height: 15vh; border-radius: 100px"/>');
-            }
+            // }
 
             $$('.profile_details').append(`
                 <div style="margin-left: 10px; font-size: 20px;">` + user.first_name + ' ' + user.last_name + `</div>
                 <div style="margin-left: 10px; font-size: 10px;">` + user.email + `</div>
             `);
 
-            $$('.user_photo').on('click', () => {
-                addPhoto();
+            $$('#update_password_btn').on('click', () => {
+                updatePassword();
             });
 
-            $$('.profile-pic-upload').append('<input class="button button-big button-fill display-none" type="file" id="_file"><button class="button-fill button" id="upload">Upload</button>');
-            $$('#upload').on('click', function () {
-                $$('#_file').click();
-            });
+            // $$('.user_photo').on('click', () => {
+            //     addPhoto();
+            // });
 
-            $$('#_file').on('change', function () {
-                sendPhotoToBackend(this);
-            });
+            // $$('.profile-pic-upload').append('<input class="button button-big button-fill display-none" type="file" id="_file"><button class="button-fill button" id="upload">Upload</button>');
+            // $$('#upload').on('click', function () {
+            //     $$('#_file').click();
+            // });
+            //
+            // $$('#_file').on('change', function () {
+            //     sendPhotoToBackend(this);
+            // });
 
         });
+
+        const viewPassword = () => {
+            if ($$('#password').attr('type') === 'password') {
+                $$('#password').prop('type', 'text');
+                $$('.password_icon').text('eye_slash_fill');
+            } else if ($$('#password').attr('type') === 'text') {
+                $$('#password').prop('type', 'password');
+                $$('.password_icon').text('eye_fill');
+            }
+        }
 
         return $render;
     };
@@ -74,6 +94,10 @@
             el: '#update_profile_pic',
             swipeToClose: true,
         }).open();
+    }
+
+    function updatePassword() {
+        app.views.main.router.navigate('/update-password/');
     }
 
     function sendPhotoToBackend(el) {

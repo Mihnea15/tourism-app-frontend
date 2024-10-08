@@ -170,6 +170,11 @@ var routes = [
         componentUrl: './pages/login.html',
     },
     {
+        name: 'update-password',
+        path: '/update-password/',
+        componentUrl: './pages/update-password.html',
+    },
+    {
         name: 'register',
         path: '/register/',
         componentUrl: './pages/register.html',

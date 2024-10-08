@@ -20,5 +20,9 @@
   object-fit: contain;
 }
 
+.button-danger {
+  background-color: red!important;
+}
+
 
 /* Your app custom styles here */

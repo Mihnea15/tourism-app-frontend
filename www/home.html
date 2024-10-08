@@ -91,11 +91,11 @@
 
 <script>
     let $$ = Dom7;
+    let map;
     export default (props, {$on}) => {
         const cities = props.cities;
         const business = props.business;
 
-        let map;
         let markers = {};
         let isDragging = false; // Variabilă pentru a monitoriza starea "dragging"
 
@@ -104,13 +104,15 @@
 
             if (cities.length > 0) {
                 setTimeout(function () {
-                    initMap(cities[0].latitude, cities[0].longitude, cities[0].name);
+                    initMap(cities[0].latitude, cities[0].longitude);
                 }, 500);
             }
 
             for (let i = 0; i < business.length; i++) {
                 if (business[i]['city_id'] == cities[0]['id']) {
-                    updateBusinesses(cities[0]['id']);
+                    setTimeout(function () {
+                        updateBusinesses(cities[0]['id']);
+                    }, 600);
                 }
             }
 
@@ -190,7 +192,7 @@
             }
         }
 
-        function initMap(latitude, longitude, cityName) {
+        function initMap(latitude, longitude) {
             map = L.map('map').setView([latitude, longitude], 13);
 
             // Tile layer cu tema "light" de la CartoDB Positron
@@ -204,7 +206,7 @@
             if (map) {
                 map.setView([latitude, longitude], 13);
             } else {
-                initMap(latitude, longitude, cityName);
+                initMap(latitude, longitude);
             }
         }
 
