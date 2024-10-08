@@ -1,16 +1,40 @@
 <template>
-    <div class="page" data-name="user-details">
-        <!-- Navbar -->
+    <!-- Componentele și conținutul paginii trebuie să fie HTML valid -->
+    <div class="page" data-name="home">
+        <!-- Left panel with cover effect-->
+        <div class="panel panel-left panel-cover dark panel-init">
+            <div class="view">
+                <div class="page">
+                    <div class="navbar">
+                        <div class="navbar-bg"></div>
+                        <div class="navbar-inner"></div>
+                    </div>
+                    <div class="page-content">
+                        <div class="block">
+                            <div class="card">
+                                <div class="card-header display-flex">
+                                    <div class="profile_picture_sidebar" style="margin: 0 auto;"></div>
+                                </div>
+                                <div class="profile_details_sidebar width-100 text-align-center padding-bottom"></div>
+                            </div>
+                            <div class="padding-left padding-right">
+                                <button class="button button-fill panel-close" style="background-color: red" @click=${disconnect}>Disconnect</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="navbar">
             <div class="navbar-bg"></div>
-            <div class="navbar-inner sliding">
+            <div class="navbar-inner">
                 <div class="left">
-                    <a href="#" class="back link">
-                        <i class="icon icon-back"></i>
-                        <span class="if-not-md">Back</span>
+                    <a href="#" class="link icon-only panel-open" data-panel="left">
+                        <i class="icon f7-icons if-not-md">menu</i>
+                        <i class="icon material-icons if-md">menu</i>
                     </a>
                 </div>
-                <div class="title" id="username" style="font-size: 20px;">${user.first_name} ${user.last_name}</div>
+                <div class="title" id="username" style="margin-left: 5vh">Profile Management</div>
             </div>
         </div>
         <!-- Page Content -->
@@ -36,6 +60,19 @@
                 </div>
             </div>
         </div>
+        <div class="toolbar tabbar toolbar-bottom">
+            <div class="toolbar-inner">
+                <a href="/" class="tab-link" data-route-tab-id="home">
+                    <i class="icon f7-icons">house_fill</i>
+                </a>
+                <a href="/favourites/" class="tab-link" data-route-tab-id="favourites">
+                    <i class="icon f7-icons">heart</i>
+                </a>
+                <a href="/user-profile/" class="tab-link active-tab" data-route-tab-id="profile">
+                    <i class="icon f7-icons">person_circle</i>
+                </a>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -44,6 +81,20 @@
         let user = props.user;
 
         $on('pageInit', (e, page) => {
+            if ($$('.profile_picture_sidebar img').length === 0) {
+                $$('.profile_picture_sidebar').append('<img class="user_photo" src="css/images/profile_pic.jpg" style="height: 15vh; border-radius: 100px"/>');
+            }
+
+            if ($$('.profile_details_sidebar div').length === 0) {
+                $$('.profile_details_sidebar').append(`
+                    <div style="margin-left: 10px; font-size: 20px;">` + localStorage.getItem('username') + `</div>
+                `);
+            }
+
+            setTimeout(function () {
+                $$('.tab-link-highlight').remove();
+            }, 50);
+
             // if (user.profile_picture != null) {
                 // console.log(user.profile_picture)
                 // const sanitizedBase64 = user.profile_picture.replace(/\s/g, '');
@@ -85,6 +136,11 @@
                 $$('.password_icon').text('eye_fill');
             }
         }
+
+        const disconnect = () => {
+            localStorage.removeItem('user_id');
+            app.views.main.router.navigate('/login/');
+        };
 
         return $render;
     };

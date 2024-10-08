@@ -7,16 +7,18 @@
                 <div class="page">
                     <div class="navbar">
                         <div class="navbar-bg"></div>
-                        <div class="navbar-inner">
-                            <div class="title">Tourism Made Easy</div>
-                        </div>
+                        <div class="navbar-inner"></div>
                     </div>
                     <div class="page-content">
                         <div class="block">
-                            <div class="row">
-                                <a href="/" class="button button-fill text-color-white" style="width: 40px; background-color: #5d5d5da1;">
-                                    <i class="icon material-icons if-md">house_fill</i>
-                                </a>
+                            <div class="card">
+                                <div class="card-header display-flex">
+                                    <div class="profile_picture_sidebar" style="margin: 0 auto;"></div>
+                                </div>
+                                <div class="profile_details_sidebar width-100 text-align-center padding-bottom"></div>
+                            </div>
+                            <div class="padding-left padding-right">
+                                <button class="button button-fill panel-close" style="background-color: red" @click=${disconnect}>Disconnect</button>
                             </div>
                         </div>
                     </div>
@@ -32,6 +34,7 @@
                         <i class="icon material-icons if-md">menu</i>
                     </a>
                 </div>
+                <div class="title" id="username" style="margin-left: 10vh">Favourites</div>
             </div>
         </div>
         <!-- Page Content -->
@@ -57,9 +60,9 @@
                     <i class="icon f7-icons">house_fill</i>
                 </a>
                 <a href="/favourites/" class="tab-link active-tab" data-route-tab-id="favourites">
-                    <i class="icon f7-icons" style="color: red!important;">heart_fill</i>
+                    <i class="icon f7-icons" style="color: red">heart_fill</i>
                 </a>
-                <a href="/" class="tab-link" data-route-tab-id="profile">
+                <a href="/user-profile/" class="tab-link" data-route-tab-id="profile">
                     <i class="icon f7-icons">person_circle</i>
                 </a>
             </div>
@@ -77,6 +80,16 @@
         }
 
         $on('pageInit', (e, page) => {
+            if ($$('.profile_picture_sidebar img').length === 0) {
+                $$('.profile_picture_sidebar').append('<img class="user_photo" src="css/images/profile_pic.jpg" style="height: 15vh; border-radius: 100px"/>');
+            }
+
+            if ($$('.profile_details_sidebar div').length === 0) {
+                $$('.profile_details_sidebar').append(`
+                    <div style="margin-left: 10px; font-size: 20px;">` + localStorage.getItem('username') + `</div>
+                `);
+            }
+
             setTimeout(function () {
                 $$('.tab-link-highlight').remove();
 
@@ -90,7 +103,12 @@
                     '<img class="margin-right" src="' + businesses[i].logo + '" alt="' + businesses[i].name + ' Logo" style="width: 50px; height: 50px; border-radius: 25px;"">'
                 );
             }
-        })
+        });
+
+        const disconnect = () => {
+            localStorage.removeItem('user_id');
+            app.views.main.router.navigate('/login/');
+        };
 
         return $render;
     };

@@ -7,13 +7,17 @@
                 <div class="page">
                     <div class="navbar">
                         <div class="navbar-bg"></div>
-                        <div class="navbar-inner">
-                            <div class="title">Tourism Made Easy</div>
-                        </div>
+                        <div class="navbar-inner"></div>
                     </div>
                     <div class="page-content">
                         <div class="block">
-                            <div class="row">
+                            <div class="card">
+                                <div class="card-header display-flex">
+                                    <div class="profile_picture_sidebar" style="margin: 0 auto;"></div>
+                                </div>
+                                <div class="profile_details_sidebar width-100 text-align-center padding-bottom"></div>
+                            </div>
+                            <div class="padding-left padding-right">
                                 <button class="button button-fill panel-close" style="background-color: red" @click=${disconnect}>Disconnect</button>
                             </div>
                         </div>
@@ -53,9 +57,7 @@
                 <!-- Select pentru business-uri -->
                 <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true"
                    data-searchbar-placeholder="Search business" style="display: none;" id="business-select-container">
-                    <select name="select-businesses" id="select-businesses">
-
-                    </select>
+                    <select name="select-businesses" id="select-businesses"></select>
                     <div class="item-content">
                         <div class="item-inner">
                             <div class="item-title">Select a business</div>
@@ -101,6 +103,16 @@
 
         $on('pageInit', () => {
             $$('.page-content').css('justify-content', 'flex-start');
+
+            if ($$('.profile_picture_sidebar img').length === 0) {
+                $$('.profile_picture_sidebar').append('<img class="user_photo" src="css/images/profile_pic.jpg" style="height: 15vh; border-radius: 100px"/>');
+            }
+
+            if ($$('.profile_details_sidebar div').length === 0) {
+                $$('.profile_details_sidebar').append(`
+                    <div style="margin-left: 10px; font-size: 20px;">` + localStorage.getItem('username') + `</div>
+                `);
+            }
 
             if (cities.length > 0) {
                 setTimeout(function () {
@@ -182,12 +194,14 @@
         });
 
         function adjustMapHeight(positionY) {
-            const mapElement = $$('#map');
-            const newHeight = positionY - mapElement.getBoundingClientRect().top;
-            if (newHeight > 200 && newHeight < 600) { // Limite pentru înălțimea hărții
-                mapElement.style.height = `${newHeight}px`;
-                if (map) {
-                    map.invalidateSize(); // Recalculează dimensiunile hărții
+            const mapElement = $$('#map')[0];
+            if (mapElement) {
+                const newHeight = positionY - mapElement.getBoundingClientRect().top;
+                if (newHeight > 200 && newHeight < 600) {
+                    mapElement.style.height = `${newHeight}px`;
+                    if (map) {
+                        map.invalidateSize();
+                    }
                 }
             }
         }
@@ -215,6 +229,8 @@
 
             const businessSelect = $$('#select-businesses');
             const businessSelectContainer = $$('#business-select-container');
+
+            businessSelect.empty();
 
             // Golește opțiunile din selectul pentru business-uri
             businessSelect.innerHTML = '';
