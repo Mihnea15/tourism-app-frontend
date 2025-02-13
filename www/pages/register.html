@@ -181,26 +181,24 @@
                 }),
             }).then((response) => {
                     if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        // app.dialog.alert(response.message);
                     }
                     return response.json();
-            }).then((data) => {
-                // Gestionare răspuns succes
+            }).then((res) => {
+                let data = res.data;
                 app.preloader.hide();
                 if (data.status === 'success') {
-                    localStorage.setItem('user_id', data.user_id);
-                    localStorage.setItem('username', data.username);
-                    localStorage.setItem('email', data.email);
-                    app.views.main.router.navigate('/');
+                    // localStorage.setItem('user_id', data.user_id);
+                    // localStorage.setItem('username', data.username);
+                    // localStorage.setItem('email', data.email);
+                    app.views.main.router.navigate('/login/');
                 } else {
-                    app.dialog.alert(data.message);
+                    app.dialog.alert(data['message']);
                 }
-                console.log(data)
             })
             .catch((err) => {
-                console.error(err);
                 app.preloader.hide();
-                app.dialog.alert('Registration failed due to a network error');
+                app.dialog.alert(err.message);
             });
         }
 
