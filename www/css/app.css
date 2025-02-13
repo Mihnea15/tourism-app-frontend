@@ -1,4 +1,4 @@
-/* iOS Cordova Tweak */
+
 .device-cordova.device-ios {
   height: 100vh;
 }
@@ -24,5 +24,36 @@
   background-color: red!important;
 }
 
+.leaflet-control-layers-mobile {
+    background: white;
+    padding: 6px;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+}
+
+.leaflet-control-layers-mobile label {
+    display: block;
+    padding: 8px 12px;
+    margin: 0;
+    clear: both;
+    cursor: pointer;
+}
+
+.leaflet-control-layers-mobile input[type="radio"] {
+    margin-right: 8px;
+}
+
+.leaflet-control-layers-mobile label span {
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.leaflet-control-layers-base div {
+    margin-bottom: 4px;
+}
+
+.leaflet-control-layers-mobile input:checked + span {
+    font-weight: bold;
+}
 
 /* Your app custom styles here */
