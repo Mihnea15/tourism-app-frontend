@@ -3,15 +3,12 @@ var routes = [
         name: 'home',
         path: '/',
         async: function ({app, to, from, resolve, reject}) {
-            // Afișează preloader-ul
             app.preloader.show();
 
-            // Efectuează cererea pentru fișierul JSON
             fetch(`${apiEntryPoint}api-city`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    // Include other headers if necessary
                 },
             })
                 .then((response) => {
@@ -22,20 +19,16 @@ var routes = [
                 })
                 .then((res) => {
                     let data = res.data;
-                    // Extract data about cities, business and trails from JSON
                     let cities = data.cities;
                     let business = data.business;
                     let trails = data.trails;
 
-                    // Store data in store
                     store.dispatch('addCities', cities);
                     store.dispatch('addBusiness', business);
                     store.dispatch('addTrails', trails);
 
-                    // Hide preloader
                     app.preloader.hide();
 
-                    // Call resolve function to load the component
                     resolve(
                         {
                             componentUrl: './home.html',
@@ -52,7 +45,7 @@ var routes = [
                 .catch((err) => {
                     console.error(err);
                     app.preloader.hide();
-                    reject(); // Handle error
+                    reject();
                 });
         },
     },
@@ -62,7 +55,6 @@ var routes = [
         async: function ({app, to, from, resolve, reject}) {
             app.preloader.show();
 
-            // Efectuează cererea pentru fișierul JSON
             fetch(`${apiEntryPoint}api-business`)
                 .then((response) => {
                     if (!response.ok) {
@@ -72,10 +64,8 @@ var routes = [
                 })
                 .then((res) => {
                     let data = res.data;
-                    // Găsește afacerea în funcție de ID
                     let businessDetails = data.business.find(b => b.id == to.params.business_id);
 
-                    // Stochează detaliile afacerii în store
                     store.dispatch('addBusinessDetails', businessDetails);
                     store.dispatch('addFavourites', data.favourites);
 
@@ -95,7 +85,7 @@ var routes = [
                 .catch((err) => {
                     console.error(err);
                     app.preloader.hide();
-                    reject(); // Gestionare eroare
+                    reject(); 
                 });
         },
     },
@@ -105,7 +95,6 @@ var routes = [
         async: function ({app, to, from, resolve, reject}) {
             app.preloader.show();
 
-            // Efectuează cererea pentru fișierul JSON
             fetch(`${apiEntryPoint}api-business/get-favourites?userId=${localStorage.getItem('user_id')}`)
                 .then((response) => {
                     if (!response.ok) {
@@ -115,7 +104,6 @@ var routes = [
                 })
                 .then((res) => {
                     let data = res.data;
-                    // Găsește afacerea în funcție de ID
                     let businesses = data;
 
                     app.preloader.hide();
@@ -134,7 +122,7 @@ var routes = [
                 .catch((err) => {
                     console.error(err);
                     app.preloader.hide();
-                    reject(); // Gestionare eroare
+                    reject();
                 });
         },
     },
@@ -144,7 +132,6 @@ var routes = [
         async: function ({app, to, from, resolve, reject}) {
             app.preloader.show();
 
-            // Efectuează cererea pentru fișierul JSON
             fetch(`${apiEntryPoint}user/get-user-data?userId=${localStorage.getItem('user_id')}`)
                 .then((response) => {
                     if (!response.ok) {
@@ -153,7 +140,6 @@ var routes = [
                     return response.json();
                 })
                 .then((res) => {
-                    // Găsește afacerea în funcție de ID
                     let user = res.data;
 
                     app.preloader.hide();
@@ -172,7 +158,7 @@ var routes = [
                 .catch((err) => {
                     console.error(err);
                     app.preloader.hide();
-                    reject(); // Gestionare eroare
+                    reject();
                 });
         },
     },
@@ -190,69 +176,6 @@ var routes = [
         name: 'register',
         path: '/register/',
         componentUrl: './pages/register.html',
-    },
-    {
-        path: '/about/',
-        url: './pages/about.html',
-    },
-    {
-        path: '/form/',
-        url: './pages/form.html',
-    },
-    {
-        path: '/settings/',
-        url: './pages/settings.html',
-    },
-    {
-        path: '/dynamic-route/blog/:blogId/post/:postId/',
-        componentUrl: './pages/dynamic-route.html',
-    },
-    {
-        path: '/request-and-load/user/:userId/',
-        async: function ({router, to, resolve}) {
-            // App instance
-            var app = router.app;
-
-            // Show Preloader
-            app.preloader.show();
-
-            // User ID from request
-            var userId = to.params.userId;
-
-            // Simulate Ajax Request
-            setTimeout(function () {
-                // We got user data from request
-                var user = {
-                    firstName: 'Vladimir',
-                    lastName: 'Kharlampidi',
-                    about: 'Hello, i am creator of Framework7! Hope you like it!',
-                    links: [
-                        {
-                            title: 'Framework7 Website',
-                            url: 'http://framework7.io',
-                        },
-                        {
-                            title: 'Framework7 Forum',
-                            url: 'http://forum.framework7.io',
-                        },
-                    ]
-                };
-                // Hide Preloader
-                app.preloader.hide();
-
-                // Resolve route to load page
-                resolve(
-                    {
-                        componentUrl: './pages/request-and-load.html',
-                    },
-                    {
-                        props: {
-                            user: user,
-                        }
-                    }
-                );
-            }, 1000);
-        },
     },
     // Default route (404 page). MUST BE THE LAST
     {
