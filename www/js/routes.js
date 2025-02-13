@@ -7,26 +7,35 @@ var routes = [
             app.preloader.show();
 
             // Efectuează cererea pentru fișierul JSON
-            fetch(`${apiEntryPoint}api-cities`)
+            fetch(`${apiEntryPoint}api-city`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    // Include other headers if necessary
+                },
+            })
                 .then((response) => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! Status: ${response.status}`);
                     }
                     return response.json();
                 })
-                .then((data) => {
-                    // Extrage datele despre orașe și afaceri din fișierul JSON
+                .then((res) => {
+                    let data = res.data;
+                    // Extract data about cities, business and trails from JSON
                     let cities = data.cities;
                     let business = data.business;
+                    let trails = data.trails;
 
-                    // Stochează datele în store
+                    // Store data in store
                     store.dispatch('addCities', cities);
                     store.dispatch('addBusiness', business);
+                    store.dispatch('addTrails', trails);
 
-                    // Ascunde preloader-ul
+                    // Hide preloader
                     app.preloader.hide();
 
-                    // Apelează funcția `resolve` pentru a încărca componenta
+                    // Call resolve function to load the component
                     resolve(
                         {
                             componentUrl: './home.html',
@@ -35,6 +44,7 @@ var routes = [
                             props: {
                                 cities: cities,
                                 business: business,
+                                trails: trails,
                             },
                         }
                     );
@@ -42,7 +52,7 @@ var routes = [
                 .catch((err) => {
                     console.error(err);
                     app.preloader.hide();
-                    reject(); // Gestionare eroare
+                    reject(); // Handle error
                 });
         },
     },
@@ -60,7 +70,8 @@ var routes = [
                     }
                     return response.json();
                 })
-                .then((data) => {
+                .then((res) => {
+                    let data = res.data;
                     // Găsește afacerea în funcție de ID
                     let businessDetails = data.business.find(b => b.id == to.params.business_id);
 
@@ -102,7 +113,8 @@ var routes = [
                     }
                     return response.json();
                 })
-                .then((data) => {
+                .then((res) => {
+                    let data = res.data;
                     // Găsește afacerea în funcție de ID
                     let businesses = data;
 
@@ -140,9 +152,9 @@ var routes = [
                     }
                     return response.json();
                 })
-                .then((data) => {
+                .then((res) => {
                     // Găsește afacerea în funcție de ID
-                    let user = data;
+                    let user = res.data;
 
                     app.preloader.hide();
 
@@ -186,14 +198,6 @@ var routes = [
     {
         path: '/form/',
         url: './pages/form.html',
-    },
-    {
-        path: '/catalog/',
-        componentUrl: './pages/catalog.html',
-    },
-    {
-        path: '/product/:id/',
-        componentUrl: './pages/product.html',
     },
     {
         path: '/settings/',

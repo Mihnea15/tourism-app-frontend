@@ -1,5 +1,4 @@
 <template>
-    <!-- Componentele și conținutul paginii trebuie să fie HTML valid -->
     <div class="page" data-name="home">
         <!-- Left panel with cover effect-->
         <div class="panel panel-left panel-cover dark panel-init">
@@ -18,7 +17,7 @@
                                 <div class="profile_details_sidebar width-100 text-align-center padding-bottom"></div>
                             </div>
                             <div class="padding-left padding-right">
-                                <button class="button button-fill panel-close" style="background-color: red" @click=${disconnect}>Disconnect</button>
+                                <button class="button button-fill panel-close" style="background-color: red" @click=${disconnect}>Log out</button>
                             </div>
                         </div>
                     </div>
@@ -40,7 +39,6 @@
         <!-- Page Content -->
         <div class="page-content">
             <div class="list list-strong-ios list-outline-ios list-dividers-ios">
-                <!-- Select pentru orașe -->
                 <a href="#" class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-searchbar-placeholder="Search for a city...">
                     <select name="select-cities">
                         ${cities.map((city) => $h`
@@ -54,7 +52,6 @@
                         </div>
                     </div>
                 </a>
-                <!-- Select pentru business-uri -->
                 <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true"
                    data-searchbar-placeholder="Search business" style="display: none;" id="business-select-container">
                     <select name="select-businesses" id="select-businesses"></select>
@@ -67,7 +64,6 @@
                 </a>
             </div>
 
-            <!-- Card pentru harta -->
             <div class="card padding-left-half padding-right-half" style="position: relative;">
                 <div id="map" style="height: 440px; border-radius: 15px; position: relative;"></div>
                 <div id="drag-control" style="width: 30px; height: 30px; position: absolute; bottom: 14px; right: 6px; cursor: ns-resize; border-radius: 17px; background-color: #cccccc00; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
@@ -99,7 +95,7 @@
         const business = props.business;
 
         let markers = {};
-        let isDragging = false; // Variabilă pentru a monitoriza starea "dragging"
+        let isDragging = false;
 
         $on('pageInit', () => {
             $$('.page-content').css('justify-content', 'flex-start');
@@ -117,6 +113,29 @@
             if (cities.length > 0) {
                 setTimeout(function () {
                     initMap(cities[0].latitude, cities[0].longitude);
+                    
+                    if (props.trails && props.trails.length > 0) {
+                        props.trails.forEach(trail => {
+                            try {
+                                const coordinates = typeof trail.coordinates === 'string' 
+                                    ? JSON.parse(trail.coordinates) 
+                                    : trail.coordinates;
+                                
+                                const markers = typeof trail.markers === 'string' 
+                                    ? JSON.parse(trail.markers) 
+                                    : (trail.markers || []);
+
+                                addTrail(
+                                    coordinates,
+                                    trail.name,
+                                    trail.difficulty,
+                                    markers
+                                );
+                            } catch (error) {
+                                console.error('Error adding trail:', error, trail);
+                            }
+                        });
+                    }
                 }, 500);
             }
 
@@ -128,7 +147,6 @@
                 }
             }
 
-            // Adaugă event listener pentru selectarea orașelor
             const selectElement = document.querySelector('select[name="select-cities"]');
             if (selectElement) {
                 selectElement.addEventListener('change', (event) => {
@@ -144,22 +162,19 @@
                 });
             }
 
-            // Event listener pentru selectarea business-urilor
             const businessSelect = $$('#select-businesses');
             businessSelect.on('change', (event) => {
                 const selectedBusinessId = event.target.value;
                 const selectedMarker = markers[selectedBusinessId];
 
                 if (selectedMarker) {
-                    map.setView(selectedMarker.getLatLng(), 15); // Zoom pe marker
-                    selectedMarker.openPopup(); // Deschide popup-ul markerului
+                    map.setView(selectedMarker.getLatLng(), 15);
+                    selectedMarker.openPopup();
                 }
             });
 
-            // Event listener pentru "drag control"
             const dragControl = $$('#drag-control');
 
-            // Evenimente pentru mouse
             dragControl.on('mousedown', (event) => {
                 isDragging = true;
                 event.preventDefault();
@@ -175,7 +190,6 @@
                 isDragging = false;
             });
 
-            // Evenimente pentru dispozitive tactile
             dragControl.on('touchstart', (event) => {
                 isDragging = true;
                 event.preventDefault();
@@ -209,11 +223,30 @@
         function initMap(latitude, longitude) {
             map = L.map('map').setView([latitude, longitude], 13);
 
-            // Tile layer cu tema "light" de la CartoDB Positron
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            const streetLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
                 maxZoom: 18
-            }).addTo(map);
+            });
+
+            const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: '&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            });
+
+            const terrainLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenTopoMap'
+            });
+
+            streetLayer.addTo(map);
+
+            const baseMaps = {
+                "Street": streetLayer,
+                "Satellite": satelliteLayer,
+                "Terrain": terrainLayer
+            };
+
+            L.control.layers(baseMaps).addTo(map);
+
+            return map;
         }
 
         function updateMap(latitude, longitude, cityName) {
@@ -232,9 +265,8 @@
 
             businessSelect.empty();
 
-            // Golește opțiunile din selectul pentru business-uri
             businessSelect.innerHTML = '';
-            markers = {}; // Resetează markerii anteriori
+            markers = {};
 
             if (filteredBusinesses.length > 0) {
                 businessSelectContainer.css('display', 'block');
@@ -269,7 +301,7 @@
                     `;
 
                     marker.bindPopup(popupContent);
-                    markers[b.id] = marker; // Stochează markerul cu ID-ul business-ului
+                    markers[b.id] = marker;
                 });
             } else {
                 businessSelectContainer.style.display = 'none';
@@ -289,6 +321,119 @@
             localStorage.removeItem('user_id');
             app.views.main.router.navigate('/login/');
         };
+
+        function getMarkerIcon(type) {
+            const icons = {
+                'parking': '<i class="f7-icons" style="color: blue;">car_fill</i>',
+                'viewpoint': '<i class="f7-icons" style="color: green;">camera_fill</i>',
+                'rest_area': '<i class="f7-icons" style="color: brown;">bed_double_fill</i>',
+                'water_source': '<i class="f7-icons" style="color: blue;">drop_fill</i>',
+                'shelter': '<i class="f7-icons" style="color: brown;">house_fill</i>'
+            };
+            return icons[type] || '<i class="f7-icons">placemark</i>';
+        }
+
+        function addTrail(coordinates, name, difficulty, markers = []) {
+            const trailCoordinates = coordinates.map(coord => {
+                if (Array.isArray(coord)) {
+                    return coord;
+                }
+                if (coord.lat && coord.lng) {
+                    return [coord.lat, coord.lng];
+                }
+                return coord;
+            });
+
+            const interpolatedCoordinates = [];
+            for (let i = 0; i < trailCoordinates.length - 1; i++) {
+                const start = trailCoordinates[i];
+                const end = trailCoordinates[i + 1];
+                
+                interpolatedCoordinates.push(start);
+                
+                for (let j = 1; j < 5; j++) {
+                    const fraction = j / 5;
+                    const lat = start[0] + (end[0] - start[0]) * fraction;
+                    const lng = start[1] + (end[1] - start[1]) * fraction;
+                    
+                    const variation = 0.0001; // Ajustează această valoare pentru mai mult sau mai puțin efect
+                    const randomLat = lat + (Math.random() - 0.5) * variation;
+                    const randomLng = lng + (Math.random() - 0.5) * variation;
+                    
+                    interpolatedCoordinates.push([randomLat, randomLng]);
+                }
+            }
+            interpolatedCoordinates.push(trailCoordinates[trailCoordinates.length - 1]);
+
+            const trail = L.polyline(interpolatedCoordinates, {
+                color: getTrailColor(difficulty),
+                weight: 4,
+                opacity: 0.8,
+                smoothFactor: 1
+            }).addTo(map);
+
+            const startMarker = L.marker(trailCoordinates[0], {
+                icon: L.divIcon({
+                    html: '<i class="f7-icons" style="color: green;">flag_fill</i>',
+                    className: 'trail-marker'
+                })
+            }).addTo(map);
+
+            const endMarker = L.marker(trailCoordinates[trailCoordinates.length - 1], {
+                icon: L.divIcon({
+                    html: '<i class="f7-icons" style="color: red;">flag_fill</i>',
+                    className: 'trail-marker'
+                })
+            }).addTo(map);
+
+            if (markers && markers.length > 0) {
+                markers.forEach(marker => {
+                    L.marker([marker.lat, marker.lng], {
+                        icon: L.divIcon({
+                            html: getMarkerIcon(marker.type),
+                            className: 'trail-poi-marker'
+                        })
+                    })
+                    .bindPopup(`
+                        <div class="poi-popup">
+                            <h4>${marker.type.replace('_', ' ').toUpperCase()}</h4>
+                            <p>${marker.description}</p>
+                        </div>
+                    `)
+                    .addTo(map);
+                });
+            }
+
+            trail.bindPopup(`
+                <div class="trail-popup">
+                    <h3>${name}</h3>
+                    <p>Difficulty: ${difficulty}</p>
+                    <p>Distance: ${calculateDistance(trailCoordinates)} km</p>
+                    <button class="button button-fill" onclick="startNavigation('${name}')">
+                        Start Navigation
+                    </button>
+                </div>
+            `);
+
+            return trail;
+        }
+
+        function calculateDistance(coordinates) {
+            let distance = 0;
+            for (let i = 1; i < coordinates.length; i++) {
+                distance += map.distance(coordinates[i-1], coordinates[i]);
+            }
+            return (distance / 1000).toFixed(2);
+        }
+
+        function getTrailColor(difficulty) {
+            switch(difficulty.toLowerCase()) {
+                case 'easy': return '#4CAF50';
+                case 'medium': return '#FFC107';
+                case 'hard': return '#F44336';
+                default: return '#2196F3';
+            }
+        }
 
         return $render;
     };

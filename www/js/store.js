@@ -5,6 +5,7 @@ const store = createStore({
         business: [],
         businessDetails: [],
         favourites: [],
+        trails: [],
     },
     getters: {
         cities({state}) {
@@ -19,6 +20,9 @@ const store = createStore({
         favourites({state}) {
             return state.favourites;
         },
+        trails({state}) {
+            return state.trails;
+        },
     },
     actions: {
         addCities({state}, cities) {
@@ -32,6 +36,9 @@ const store = createStore({
         },
         addFavourites({state}, favourites) {
             state.favourites = [...state.favourites, favourites];
+        },
+        addTrails({state}, trails) {
+            state.trails = [...state.trails, trails];
         },
     },
 })
