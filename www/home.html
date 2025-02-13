@@ -299,7 +299,7 @@
             };
 
             L.control.layers(baseMaps, null, {
-                collapsed: true,
+                collapsed: false,
                 position: 'topright',
                 className: 'leaflet-control-layers-mobile' 
             }).addTo(map);
@@ -464,14 +464,37 @@
 
             trail.bindPopup(`
                 <div class="trail-popup">
-                    <h3>${name}</h3>
-                    <p>Difficulty: ${difficulty}</p>
-                    <p>Distance: ${calculateDistance(trailCoordinates)} km</p>
-                    <button class="button button-fill" onclick="startNavigation('${name}')">
+                    <h3 style="margin: 0 0 8px 0; color: ${getTrailColor(difficulty)};">${name}</h3>
+                    <div class="difficulty-badge" style="
+                        background-color: ${getTrailColor(difficulty)};
+                        color: white;
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        display: inline-block;
+                        margin-bottom: 8px;
+                        font-weight: bold;
+                    ">
+                        ${difficulty.toUpperCase()}
+                    </div>
+                    <p style="margin: 8px 0;">Distance: ${calculateDistance(trailCoordinates)} km</p>
+                    <button class="button button-fill" style="background-color: ${getTrailColor(difficulty)};" 
+                        onclick="startNavigation(${trailCoordinates[0][0]}, ${trailCoordinates[0][1]}, ${trailCoordinates[trailCoordinates.length-1][0]}, ${trailCoordinates[trailCoordinates.length-1][1]})">
                         Start Navigation
                     </button>
                 </div>
             `);
+
+            trail.on('mouseover', function() {
+                this.setStyle({
+                    weight: 6,
+                    opacity: 1
+                });
+            }).on('mouseout', function() {
+                this.setStyle({
+                    weight: 4,
+                    opacity: 0.8
+                });
+            });
 
             return trail;
         }
@@ -485,13 +508,23 @@
         }
 
         function getTrailColor(difficulty) {
-            switch(difficulty.toLowerCase()) {
-                case 'easy': return '#4CAF50';
-                case 'medium': return '#FFC107';
-                case 'hard': return '#F44336';
-                default: return '#2196F3';
-            }
+            const colors = {
+                'easy': '#4CAF50',
+                'medium': '#FFC107',
+                'hard': '#F44336'
+            };
+            return colors[difficulty.toLowerCase()] || '#2196F3';
         }
+
+        window.startNavigation = function(startLat, startLng, endLat, endLng) {
+            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${startLat},${startLng}&destination=${endLat},${endLng}&travelmode=walking`;
+            
+            if (Framework7.device.cordova) {
+                window.open(googleMapsUrl, '_system');
+            } else {
+                window.open(googleMapsUrl, '_blank');
+            }
+        };
 
         return $render;
     };
