@@ -129,6 +129,8 @@
                     '<swiper-slide><img src="' + businessDetails.images[i].image_path + '" alt="' + businessDetails.name + ' Image ' + (i + 1) + '" style="max-width: ' + imgWidth + '; height: 47vh;"></swiper-slide>'
                 );
             }
+            
+            $$('#swiper').append('<swiper-slide></swiper-slide>');
 
             const ratingHtml = createStarRating(businessDetails.rating);
             $$('.rating_container').append(

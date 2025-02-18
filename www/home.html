@@ -151,13 +151,30 @@
             const selectElement = document.querySelector('select[name="select-cities"]');
             if (selectElement) {
                 selectElement.addEventListener('change', (event) => {
-                    const selectedCityId = event.target.value;
-                    const selectedCity = cities.find((city) => city.id == selectedCityId);
+                    const cityId = event.target.value;
+                    const selectedCity = cities.find((city) => city.id == cityId);
+                    $$('#selected-city').text(selectedCity ? selectedCity.name : 'Choose City');
+
+                    const businessSelect = $$('#select-businesses');
+                    const businessContainer = $$('#business-select-container');
+                    
+                    const cityBusinesses = business.filter(b => b.city_id == cityId);
+
+                    if (cityBusinesses.length > 0) {
+                        businessSelect.html(
+                            cityBusinesses.map(b => `
+                                <option value="${b.id}">${b.name}</option>
+                            `).join('')
+                        );
+                        businessContainer.show();
+                    } else {
+                        businessContainer.hide();
+                        businessSelect.html('');
+                    }
 
                     if (selectedCity) {
-                        $$('#selected-city').textContent = selectedCity.name;
                         updateMap(selectedCity.latitude, selectedCity.longitude, selectedCity.name);
-                        updateBusinesses(selectedCityId);
+                        updateBusinesses(cityId);
                     }
                     selectElement.blur();
                 });
@@ -425,7 +442,7 @@
 
             const trail = L.polyline(interpolatedCoordinates, {
                 color: getTrailColor(difficulty),
-                weight: 4,
+                weight: 8,
                 opacity: 0.8,
                 smoothFactor: 1
             }).addTo(map);
@@ -486,12 +503,12 @@
 
             trail.on('mouseover', function() {
                 this.setStyle({
-                    weight: 6,
+                    weight: 10,
                     opacity: 1
                 });
             }).on('mouseout', function() {
                 this.setStyle({
-                    weight: 4,
+                    weight: 6,
                     opacity: 0.8
                 });
             });
