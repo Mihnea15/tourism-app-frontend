@@ -2,26 +2,21 @@ var $ = Dom7;
 
 var device = Framework7.getDevice();
 var app = new Framework7({
-    name: 'Tourism-app', // App name
-    theme: 'auto', // Automatic theme detection
+    name: 'Tourism-app',
+    theme: 'auto',
     colors: {
         primary: '#8b00ff',
     },
     darkMode: true,
-    el: '#app', // App root element
-
-    // App store
+    el: '#app',
     store: store,
-    // App routes
     routes: routes,
 
 
-    // Input settings
     input: {
         scrollIntoViewOnFocus: device.cordova,
         scrollIntoViewCentered: device.cordova,
     },
-    // Cordova Statusbar settings
     statusbar: {
         iosOverlaysWebView: true,
         androidOverlaysWebView: false,
@@ -30,30 +25,47 @@ var app = new Framework7({
         init: function () {
             var f7 = this;
             if (f7.device.cordova) {
-                // Init cordova APIs (see cordova-app.js)
                 cordovaApp.init(f7);
             }
         },
     },
 });
-// Login Screen Demo
+
 $('#my-login-screen .login-button').on('click', function () {
     var username = $('#my-login-screen [name="username"]').val();
     var password = $('#my-login-screen [name="password"]').val();
 
-    // Close login screen
     app.loginScreen.close('#my-login-screen');
 
-    // Alert username and password
     app.dialog.alert('Username: ' + username + '<br/>Password: ' + password);
 });
 
-function isOpen(openingHour, closingHour, newLine = false) {
+function parseProgram(programString) {
+    const programLines = programString.split('\n');
+    const program = {};
+
+    programLines.forEach(line => {
+        const [day, hours] = line.split(': ');
+        program[day.trim()] = hours.trim();
+    });
+
+    return program;
+}
+
+
+function isOpen(openingHour, closingHour, program = null, newLine = false) {
+    let parsedProgram = parseProgram(program);
     const now = new Date();
+    const currentDay = now.toLocaleString('en-US', { weekday: 'long' });
     const [openHour, openMinute] = openingHour.split(':').map(Number);
     const [closeHour, closeMinute] = closingHour.split(':').map(Number);
 
-    // Creăm datele pentru orele de deschidere și închidere
+    const todayProgram = parsedProgram ? parsedProgram[currentDay] : null;
+
+    if (todayProgram && todayProgram.includes('Closed')) {
+        return newLine == true ? '<br>Today: <span class="badge color-red">Closed</span>' : 'Today: <span class="badge color-red">Closed</span>';
+    }
+
     const openingTime = new Date(now);
     openingTime.setHours(openHour, openMinute, 0, 0);
 

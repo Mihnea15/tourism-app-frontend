@@ -23,18 +23,9 @@
                     <i class="icon f7-icons" style="color: red">${businessDetails.favourite == 1 ? 'heart_fill' : 'heart'}</i>
                 </button>
 
-                <!-- Rating-ul -->
-                <div class="block rating_container" style="text-align: center; padding: 10px;">
-                    <!-- Rating-ul va fi adăugat dinamic aici -->
-                </div>
-                <!-- Link-ul către pagina de Google -->
-                <div class="block google_page_container" style="text-align: center; padding: 10px;">
-                    <!-- Link-ul va fi adăugat dinamic aici -->
-                </div>
-                <!-- Butonul pentru Direcții -->
-                <div class="block button_container" style="text-align: center; padding: 10px;">
-                    <!-- Butonul va fi adăugat dinamic aici -->
-                </div>
+                <div class="block rating_container" style="text-align: center; padding: 10px;"></div>
+                <div class="block google_page_container" style="text-align: center; padding: 10px;"></div>
+                <div class="block button_container" style="text-align: center; padding: 10px;"></div>
 
                 <div class="list accordion-list">
                     <ul>
@@ -103,7 +94,7 @@
         $on('pageInit', (e, page) => {
             const formattedProgram = businessDetails.program.replace(/\n/g, '<br>');
             $$('#program').html(formattedProgram);
-            $$('#is_open').html(isOpen(businessDetails.opening_hour, businessDetails.closing_hour, true));
+            $$('#is_open').html(isOpen(businessDetails.opening_hour, businessDetails.closing_hour, businessDetails.program, true));
 
             const screenWidth = window.innerWidth;
             let imgWidth;
@@ -204,7 +195,6 @@
         return $render;
     };
 
-    // Funcție pentru a crea stele pe baza rating-ului
     function createStarRating(rating) {
         const fullStars = Math.floor(rating);
         const halfStar = rating % 1 >= 0.5;
@@ -212,17 +202,14 @@
 
         let starHtml = '';
 
-        // Adaugă stelele pline
         for (let i = 0; i < fullStars; i++) {
             starHtml += '<i class="icon f7-icons color-yellow">star_fill</i>';
         }
 
-        // Adaugă stea pe jumătate (dacă există)
         if (halfStar) {
             starHtml += '<i class="icon f7-icons color-yellow">star_lefthalf_fill</i>';
         }
 
-        // Adaugă stelele goale
         for (let i = 0; i < emptyStars; i++) {
             starHtml += '<i class="icon f7-icons color-yellow">star</i>';
         }
