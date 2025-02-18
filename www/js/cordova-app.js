@@ -101,10 +101,8 @@ var cordovaApp = {
                 return resolve(localStorage.getItem('userToken'))
             }
 
-            // make sure no trash data are set in LS
             localStorage.removeItem('user_id');
             localStorage.removeItem('user_token');
-            //the reject
             console.log('Missing user_token or user_id, we should register this user');
             return reject('Missing user_token or user_id, we should register this user')
         })
@@ -136,11 +134,9 @@ var cordovaApp = {
         window.addEventListener('keyboardHeightWillChange', (event) => {
             var keyboardHeight = event.keyboardHeight;
             if (keyboardHeight > 0) {
-                // Keyboard is going to be opened
                 document.body.style.height = `calc(100% - ${keyboardHeight}px)`;
                 $('html').addClass('device-with-keyboard');
             } else {
-                // Keyboard is going to be closed
                 document.body.style.height = '';
                 $('html').removeClass('device-with-keyboard');
             }
@@ -162,7 +158,6 @@ var cordovaApp = {
         );
     },
     init: function (f7) {
-        // Save f7 instance
         cordovaApp.f7 = f7;
 
         document.addEventListener('deviceready', () => {

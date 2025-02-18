@@ -92,13 +92,10 @@
             loginForm.on('submit', (event) => {
                 event.preventDefault();
 
-                // Preia datele din formular
                 const username = loginForm.username.value;
                 const password = loginForm.password.value;
 
-                // Validare simplă
                 if (username && password) {
-                    // Aici adaugi logica de autentificare (request către server, validare etc.)
                     app.dialog.alert(`Logged in as: ${username}`);
                 } else {
                     app.dialog.alert('Please enter your username and password.');
@@ -188,9 +185,6 @@
                 let data = res.data;
                 app.preloader.hide();
                 if (data.status === 'success') {
-                    // localStorage.setItem('user_id', data.user_id);
-                    // localStorage.setItem('username', data.username);
-                    // localStorage.setItem('email', data.email);
                     app.views.main.router.navigate('/login/');
                 } else {
                     app.dialog.alert(data['message']);

@@ -1,5 +1,4 @@
 <template>
-    <!-- Componentele și conținutul paginii trebuie să fie HTML valid -->
     <div class="page" data-name="home">
         <!-- Left panel with cover effect-->
         <div class="panel panel-left panel-cover dark panel-init">
@@ -161,15 +160,13 @@
         const userId = localStorage.getItem('user_id');
 
         if (file) {
-            // Creează un obiect FormData pentru a trimite fișierul către backend
             const formData = new FormData();
             formData.append('image', file);
             formData.append('user_id', userId);
 
-            // Trimitem fișierul către backend folosind fetch
             fetch(`${apiEntryPoint}user/upload-user-photo`, {
                 method: 'POST',
-                body: formData, // Folosește FormData în loc de JSON.stringify
+                body: formData,
             })
                 .then((response) => {
                     if (!response.ok) {
@@ -178,7 +175,6 @@
                     return response.json();
                 })
                 .then((data) => {
-                    // Gestionare răspuns succes
                     app.preloader.hide();
                     console.log(data);
                 })
