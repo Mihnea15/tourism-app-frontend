@@ -93,7 +93,7 @@
                 $$('.tab-link-highlight').remove();
 
                 for (let i = 0; i <= businesses.length; i++) {
-                    $$('#is_open_' + businesses[i].id).html(isOpen(businesses[i].opening_hour, businesses[i].closing_hour, true));
+                    $$('#is_open_' + businesses[i].id).html(isOpen(businesses[i].opening_hour, businesses[i].closing_hour, businesses[i].program, true));
                 }
             }, 50);
 

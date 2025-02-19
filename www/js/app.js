@@ -54,7 +54,11 @@ function parseProgram(programString) {
 
 
 function isOpen(openingHour, closingHour, program = null, newLine = false) {
-    let parsedProgram = parseProgram(program);
+    let parsedProgram = null;
+    if (program !== null) {
+        parsedProgram = parseProgram(program);
+    }
+
     const now = new Date();
     const currentDay = now.toLocaleString('en-US', { weekday: 'long' });
     const [openHour, openMinute] = openingHour.split(':').map(Number);
