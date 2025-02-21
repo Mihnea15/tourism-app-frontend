@@ -1,135 +1,70 @@
-# Tourism-app
+# README pentru Aplicația Mobilă "Tourism App"
 
-O aplicație mobilă pentru turism care ajută utilizatorii să descopere trasee montane, obiective turistice și afaceri locale. Aplicația oferă o hartă interactivă cu trasee marcate, puncte de interes și informații detaliate despre fiecare locație.
+## Descriere
+Aplicația "Tourism App" este o aplicație mobilă dezvoltată folosind Framework7 și Apache Cordova, care permite utilizatorilor să exploreze trasee turistice, să se conecteze cu afaceri locale și să obțină informații utile despre destinații.
 
-## Caracteristici
-
-- Autentificare și profil utilizator
-- Hartă interactivă cu:
-  - Trasee montane marcate
-  - Puncte de interes (panorame, zone de popas, vârfuri etc.)
-  - Afaceri locale cu detalii și link-uri către Google
-- Selectare oraș și filtrare afaceri
-- Sistem de favorite
-- Interfață intuitivă și responsive
-- Suport pentru moduri de vizualizare hartă (stradal, satelit, teren)
-
-## Tehnologii Folosite
-
-- Framework7 - Framework UI pentru aplicații mobile
-- Cordova - Pentru build-ul nativ
-- Leaflet.js - Pentru hărți interactive
-- PHP/Yii2 - Backend
-- MySQL - Bază de date
-
-## Cerințe Sistem
-
-- Node.js (v14 sau mai recent)
-- npm (v6 sau mai recent)
-- Cordova CLI
-- Android Studio (pentru build Android)
-- Xcode (pentru build iOS)
-- XAMPP/WAMP/MAMP (pentru backend)
+## Cerințe
+- **Node.js** (versiune LTS recomandată)
+- **npm** (inclus cu Node.js)
+- **Apache Cordova** (instalat global)
+- **Java Development Kit (JDK)** (versiune 8 sau mai recentă)
+- **Android Studio** (pentru a gestiona SDK-urile Android)
 
 ## Instalare
 
-### 1. Clonare Repository
+1. **Clonează repository-ul:**
+   ```bash
+   git clone <repository-url>
+   cd tourism-app
+   ```
+
+2. **Instalează dependențele:**
+   ```bash
+   npm install
+   ```
+
+3. **Instalează Cordova (dacă nu este deja instalat):**
+   ```bash
+   npm install -g cordova
+   ```
+
+4. **Adaugă platforma Android:**
+   ```bash
+   cordova platform add android
+   ```
+
+## Rularea aplicației
+
+### În browser
+Pentru a rula aplicația în browser, folosește comanda:
 ```bash
-git clone https://github.com/your-username/tourism-app.git
-cd tourism-app
-```
-
-### 2. Instalare Dependințe Frontend
-```bash
-cd frontend
-npm install
-```
-
-### 3. Instalare Dependințe Backend
-```bash
-cd backend
-composer install
-```
-
-### 4. Configurare Bază de Date
-- Creați o bază de date MySQL
-- Copiați `backend/config/db.example.php` în `backend/config/db.php`
-- Actualizați credențialele în `db.php`
-- Rulați migrările:
-```bash
-cd backend
-php yii migrate
-```
-
-### 5. Configurare Environment
-- Copiați `.env.example` în `.env`
-- Actualizați variabilele de mediu după necesități
-
-## Rulare Aplicație
-
-### Development Server
-```bash
-# În directorul frontend
 npm start
 ```
 
-### Build pentru Android
+### Pe dispozitiv Android
+Pentru a construi și rula aplicația pe un dispozitiv Android conectat, folosește comanda:
 ```bash
-# În directorul frontend
-npm run build-cordova
-npm run build-cordova-android
+npm run cordova-android
 ```
 
-### Build pentru iOS
+## Construirea APK-ului
+
+Pentru a construi un fișier APK pentru aplicația ta, folosește următoarea comandă:
 ```bash
-# În directorul frontend
-npm run build-cordova
-npm run build-cordova-ios
+cordova build android
 ```
 
-## Structura Proiectului
+### Configurarea pentru build
+Asigură-te că ai configurat corect următoarele în fișierul `config.xml`:
 
-```
-tourism-app/
-├── frontend/               # Aplicația Framework7
-│   ├── www/               # Codul sursă frontend
-│   ├── cordova/           # Configurări Cordova
-│   └── package.json       # Dependințe frontend
-├── backend/               # API Yii2
-│   ├── config/           # Configurări backend
-│   ├── controllers/      # Controllere API
-│   ├── models/           # Modele date
-│   └── composer.json     # Dependințe backend
-└── README.md
-```
+- **Permisiuni**: Asigură-te că aplicația are permisiunile necesare pentru a accesa internetul și alte resurse.
+- **Network Security Config**: Dacă folosești HTTP, asigură-te că ai configurat `network_security_config.xml` pentru a permite cererile necriptate.
 
-## API Endpoints
+## Testare
+Pentru a testa aplicația pe un emulator sau pe un dispozitiv fizic, asigură-te că ai activat debugging-ul USB pe dispozitivul tău Android.
 
-- `GET /api-city` - Lista orașelor și afacerilor
-- `POST /api-login` - Autentificare utilizator
-- `GET /api-business/{id}` - Detalii afacere
-- `GET /api-trails` - Lista trasee montane
-
-## Contribuție
-
-1. Fork repository
-2. Creați un branch nou (`git checkout -b feature/AmazingFeature`)
-3. Commit modificările (`git commit -m 'Add some AmazingFeature'`)
-4. Push către branch (`git push origin feature/AmazingFeature`)
-5. Deschideți un Pull Request
+## Contribuții
+Dacă dorești să contribui la acest proiect, te rugăm să deschizi un pull request sau să raportezi problemele întâmpinate.
 
 ## Licență
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## Contact
-
-Your Name - your.email@example.com
-Project Link: https://github.com/your-username/tourism-app
-
-## Acknowledgments
-
-* [Framework7](https://framework7.io/)
-* [Leaflet](https://leafletjs.com/)
-* [OpenStreetMap](https://www.openstreetmap.org/)
-* [Yii2](https://www.yiiframework.com/)
+Acest proiect este licențiat sub [Licența MIT](LICENSE).
