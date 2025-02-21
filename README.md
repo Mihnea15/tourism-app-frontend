@@ -3,10 +3,10 @@
 ## Descriere
 Aplicația "Tourism App" este o aplicație mobilă dezvoltată folosind Framework7 și Apache Cordova, care permite utilizatorilor să exploreze trasee turistice, să se conecteze cu afaceri locale și să obțină informații utile despre destinații.
 
-![Screenshot of the App](images/screenshots/screen1.png)
-![Screenshot of the App](images/screenshots/screen2.png)
-![Screenshot of the App](images/screenshots/screen3.png)
-![Screenshot of the App](images/screenshots/screen4.png)
+![Screenshot of the App](/www/css/images/screenshots/screen1.png)
+![Screenshot of the App](/www/css/images/screenshots/screen2.png)
+![Screenshot of the App](/www/css/images/screenshots/screen3.png)
+![Screenshot of the App](/www/css/images/screenshots/screen4.png)
 
 ## Cerințe
 - **Node.js** (versiune LTS recomandată versiune 16 sau mai recentă)
