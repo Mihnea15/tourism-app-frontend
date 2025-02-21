@@ -4,10 +4,10 @@
 Aplicația "Tourism App" este o aplicație mobilă dezvoltată folosind Framework7 și Apache Cordova, care permite utilizatorilor să exploreze trasee turistice, să se conecteze cu afaceri locale și să obțină informații utile despre destinații.
 
 ## Cerințe
-- **Node.js** (versiune LTS recomandată)
+- **Node.js** (versiune LTS recomandată versiune 16 sau mai recentă)
 - **npm** (inclus cu Node.js)
 - **Apache Cordova** (instalat global)
-- **Java Development Kit (JDK)** (versiune 8 sau mai recentă)
+- **Java Development Kit (JDK)** (versiune 11 sau mai recentă)
 - **Android Studio** (pentru a gestiona SDK-urile Android)
 
 ## Instalare
