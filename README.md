@@ -65,6 +65,3 @@ Pentru a testa aplicația pe un emulator sau pe un dispozitiv fizic, asigură-te
 
 ## Contribuții
 Dacă dorești să contribui la acest proiect, te rugăm să deschizi un pull request sau să raportezi problemele întâmpinate.
-
-## Licență
-Acest proiect este licențiat sub [Licența MIT](LICENSE).
