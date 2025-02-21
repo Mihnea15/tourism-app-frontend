@@ -63,5 +63,3 @@ Asigură-te că ai configurat corect următoarele în fișierul `config.xml`:
 ## Testare
 Pentru a testa aplicația pe un emulator sau pe un dispozitiv fizic, asigură-te că ai activat debugging-ul USB pe dispozitivul tău Android.
 
-## Contribuții
-Dacă dorești să contribui la acest proiect, te rugăm să deschizi un pull request sau să raportezi problemele întâmpinate.
