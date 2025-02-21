@@ -9,7 +9,7 @@ Aplicația "Tourism App" este o aplicație mobilă dezvoltată folosind Framewor
 ![Screenshot of the App](/www/css/images/screenshots/screen4.png)
 
 ## Cerințe
-- **Node.js** (versiune LTS recomandată versiune 16 sau mai recentă)
+- **Node.js** (versiune LTS recomandată versiune 20 sau mai recentă)
 - **npm** (inclus cu Node.js)
 - **Apache Cordova** (instalat global)
 - **Java Development Kit (JDK)** (versiune 17 sau mai recentă)
