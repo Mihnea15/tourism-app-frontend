@@ -3,7 +3,7 @@
   "type": [
     "cordova"
   ],
-  "name": "Tourism-app",
+  "name": "Tourism Made Easy",
   "framework": "core",
   "template": "tabs",
   "bundler": false,

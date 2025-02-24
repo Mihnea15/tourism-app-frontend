@@ -1,4 +1,4 @@
-# README pentru Aplicația Mobilă "Tourism App"
+# README pentru Aplicația Mobilă "Tourism Made Easy"
 
 ## Descriere
 Aplicația "Tourism Made Easy" este o aplicație mobilă dezvoltată folosind Framework7 și Apache Cordova, care permite utilizatorilor să exploreze trasee turistice, să se conecteze cu afaceri locale și să obțină informații utile despre destinații.

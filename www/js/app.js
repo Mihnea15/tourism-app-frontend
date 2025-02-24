@@ -2,7 +2,7 @@ var $ = Dom7;
 
 var device = Framework7.getDevice();
 var app = new Framework7({
-    name: 'Tourism-app',
+    name: 'Tourism Made Easy',
     theme: 'auto',
     colors: {
         primary: '#8b00ff',
