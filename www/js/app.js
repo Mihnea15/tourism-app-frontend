@@ -67,7 +67,7 @@ function isOpen(openingHour, closingHour, program = null, newLine = false) {
     const todayProgram = parsedProgram ? parsedProgram[currentDay] : null;
 
     if (todayProgram && todayProgram.includes('Closed')) {
-        return newLine == true ? '<br>Today: <span class="badge color-red">Closed</span>' : 'Today: <span class="badge color-red">Closed</span>';
+        return newLine == true ? '<br>Today: <span class="badge" style="background-color: red">Closed</span>' : 'Today: <span class="badge" style="background-color: red">Closed</span>';
     }
 
     const openingTime = new Date(now);
@@ -76,7 +76,7 @@ function isOpen(openingHour, closingHour, program = null, newLine = false) {
     const closingTime = new Date(now);
     closingTime.setHours(closeHour, closeMinute, 0, 0);
 
-    let isOpen = now >= openingTime && now <= closingTime ? 'Today: <span class="badge color-green">Open</span>' : 'Today: <span class="badge color-red">Closed</span>';
+    let isOpen = now >= openingTime && now <= closingTime ? 'Today: <span class="badge color-green">Open</span>' : 'Today: <span class="badge" style="background-color: red">Closed</span>';
 
     return newLine == true ? '<br>' + isOpen : isOpen;
 }
