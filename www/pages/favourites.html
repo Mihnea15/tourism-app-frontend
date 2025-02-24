@@ -37,7 +37,7 @@
             </div>
         </div>
         <!-- Page Content -->
-        <div class="page-content">
+        <div class="page-content" style="padding-bottom: 55px;">
             ${businesses.map((business) => $h`
                 ${business.favourite == 1 ? $h`
                     <div class="card" @click=${e => redirectToBusinessDetails(`${business.id}`)}>
