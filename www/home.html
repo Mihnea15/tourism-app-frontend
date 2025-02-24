@@ -39,7 +39,7 @@
         <!-- Page Content -->
         <div class="page-content">
             <div class="list list-strong-ios list-outline-ios list-dividers-ios">
-                <a href="#" class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true" data-searchbar-placeholder="Search for a city...">
+                <a href="#" class="item-link smart-select smart-select-init card" data-open-in="popup" data-searchbar="true" data-searchbar-placeholder="Search for a city...">
                     <select name="select-cities">
                         ${cities.map((city) => $h`
                         <option value="${city.id}">${city.name}</option>
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                 </a>
-                <a class="item-link smart-select smart-select-init" data-open-in="popup" data-searchbar="true"
+                <a class="item-link smart-select smart-select-init card" data-open-in="popup" data-searchbar="true"
                    data-searchbar-placeholder="Search business" style="display: none;" id="business-select-container">
                     <select name="select-businesses" id="select-businesses"></select>
                     <div class="item-content">
