@@ -10,6 +10,7 @@ Aplicația "Tourism Made Easy" este o aplicație mobilă dezvoltată folosind Fr
     <img src="/www/css/images/screenshots/screen5.png" alt="Screenshot 5" style="width: 200px; margin: 10px;">
     <img src="/www/css/images/screenshots/screen6.png" alt="Screenshot 6" style="width: 200px; margin: 10px;">
     <img src="/www/css/images/screenshots/screen7.png" alt="Screenshot 7" style="width: 200px; margin: 10px;">
+    <img src="/www/css/images/screenshots/screen8.png" alt="Screenshot 8" style="width: 200px; margin: 10px;">
     <img src="/www/css/images/screenshots/screen3.png" alt="Screenshot 3" style="width: 200px; margin: 10px;">
     <img src="/www/css/images/screenshots/screen4.png" alt="Screenshot 4" style="width: 200px; margin: 10px;">
 </div>
